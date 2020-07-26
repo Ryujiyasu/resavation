@@ -28,4 +28,12 @@ class HomeController extends Controller
         $schedules=Schedule::whereNotNull('name')->get();
         return view('calender',['schedules'=>$schedules]);
     }
+    public function getDataJson()
+    {
+
+
+        $schedules=Schedule::whereNotNull('name')->get();
+
+        return $schedules;
+    }
 }

@@ -74,17 +74,20 @@
                     ></v-calendar>
                 </v-sheet>
             </div>
+            @{{test}}
         </v-app>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     new Vue({
         el: '#app',
         vuetify: new Vuetify(),
         data: () => ({
+            test:"",
             type: 'month',
             types: ['month', 'week', 'day', '4day'],
             mode: 'stack',
@@ -107,16 +110,22 @@
                 const min = new Date(`${start.date}T00:00:00`)
                 const max = new Date(`${end.date}T23:59:59`)
                 const eventCount = 1;
-                for (let i = 0; i < eventCount; i++) {
-                    events.push(                {
-                        name: this.names[0],
-                        start: new Date('2020-07-25 13:00'),
-                        end: new Date('2020-07-25 14:00'),
-                        color: 'blue',
-                        timed: true,
+                console.log("getEvents")
+                axios
+                    .get('/schedule/getDataJson')
+                    .then(function(response){
+                        response.data.map(function(data){
+                            console.log(data);
+                            events.push({
+                                    name: data.name,
+                                    start: new Date(data.schedule_date),
+                                    end: new Date(data.schedule_date),
+                                    color: 'blue',
+                                    timed: true,
+                                }
+                            )
+                        });
                     })
-                }
-
                 this.events = events
             },
             getEventColor (event) {
@@ -126,6 +135,10 @@
                 return Math.floor((b - a + 1) * Math.random()) + a
             },
         },
+        mounted () {
+            console.log("mounted")
+
+        }
     })
 </script>
 </body>
