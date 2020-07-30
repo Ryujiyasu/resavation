@@ -31,9 +31,13 @@ class HomeController extends Controller
     public function getDataJson()
     {
 
-
+        $datas=[];
         $schedules=Schedule::whereNotNull('name')->get();
+        foreach ($schedules as $schedule){
 
-        return $schedules;
+            $datas[]=[$schedule,$schedule->Staff()->first(),$schedule->Cource()->first()];
+        }
+
+        return $datas;
     }
 }

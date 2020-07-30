@@ -16,6 +16,8 @@ class CreateMstCourcesTable extends Migration
         Schema::create('mst_cources', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->time('start_time');
+            $table->time('end_time');
         });
     }
 

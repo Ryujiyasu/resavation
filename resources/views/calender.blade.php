@@ -116,11 +116,12 @@
                     .then(function(response){
                         response.data.map(function(data){
                             console.log(data);
+                            console.log(data[0]["schedule_date"]+data[2]["start_time"]);
                             events.push({
-                                    name: data.name,
-                                    start: new Date(data.schedule_date),
-                                    end: new Date(data.schedule_date),
-                                    color: 'blue',
+                                    name: data[0]["name"],
+                                    start: new Date(data[0]["schedule_date"]),
+                                    end: new Date(data[0]["schedule_date"]),
+                                    color: data[1]["color"],
                                     timed: true,
                                 }
                             )
@@ -135,10 +136,6 @@
                 return Math.floor((b - a + 1) * Math.random()) + a
             },
         },
-        mounted () {
-            console.log("mounted")
-
-        }
     })
 </script>
 </body>
