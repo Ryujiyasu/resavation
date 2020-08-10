@@ -71,10 +71,52 @@
                         :event-overlap-threshold="30"
                         :event-color="getEventColor"
                         @change="getEvents"
+                        @click:event="showEvent"
                     ></v-calendar>
+                    <v-menu
+                        v-model="selectedOpen"
+                        :close-on-content-click="false"
+                        offset-x
+                        :activator="selectedElement"
+                    >
+                        <v-card
+                            color="grey lighten-4"
+                            min-width="350px"
+                            flat
+                        >
+                            <v-toolbar
+                                :color="selectedEvent.color"
+                                dark
+                            >
+                                <v-btn @click="pageChange(selectedEvent.id)" icon>
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+
+                                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                <v-spacer></v-spacer>
+
+                            </v-toolbar>
+                            <v-card-text>
+                                <span v-html="selectedEvent.start"></span>
+                                <span v-html="selectedEvent.end"></span>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-btn
+                                    text
+                                    color="secondary"
+                                    @click="selectedOpen = false"
+                                >
+                                    Cancel
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+
+                    </v-menu>
                 </v-sheet>
             </div>
             @{{test}}
+
+
         </v-app>
     </div>
 </div>
@@ -100,11 +142,39 @@
                 { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
             ],
             value: '',
+            selectedOpen: false,
+            selectedEvent: {},
+
             events: [],
             colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
             names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
         }),
         methods: {
+            pageChange(id){
+                console.log(id);
+                const page='/schedule/edit/' +id;
+                window.location.href = page;
+
+
+            },
+            showEvent ({ nativeEvent, event }) {
+                const open = () => {
+                    this.selectedEvent = event
+                    this.selectedElement = nativeEvent.target
+                    setTimeout(() => this.selectedOpen = true, 10)
+                }
+                if (this.selectedOpen) {
+                    this.selectedOpen = false
+                    setTimeout(open, 10)
+                } else {
+                    open()
+                }
+                console.log(this.selectedEvent)
+
+                nativeEvent.stopPropagation()
+
+                },
+
             getEvents ({ start, end }) {
                 const events = []
                 const min = new Date(`${start.date}T00:00:00`)
@@ -119,6 +189,7 @@
                             console.log();
 
                             events.push({
+                                    id:data[2]["id"],
                                     name: data[0]["name"],
                                     start: new Date(data[3]),
                                     end: new Date(data[4]),

@@ -14,3 +14,6 @@ Route::post('/getMember', 'CalendarController@memberGet');
 
 Route::get('schedule/listing/', 'HomeController@index');
 Route::get('schedule/getDataJson/', 'HomeController@getDataJson');
+
+
+Route::get('schedule/edit/{id}', 'HomeController@editSchedule');

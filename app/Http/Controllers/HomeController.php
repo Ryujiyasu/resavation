@@ -47,4 +47,9 @@ class HomeController extends Controller
 
         return $datas;
     }
+    public function editSchedule()
+    {
+
+        return view('edit_schedule');
+    }
 }
