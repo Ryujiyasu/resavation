@@ -124,6 +124,7 @@
             <label for="straff" class="col-3 col-form-label">スタッフ</label>
             <div class="col-9">
                 <select id="staff" class="form-control">
+                    <option value="">------</option>
                     @foreach ($staffs as $staff)
                         <option value="{{$staff->id}}">{{$staff->name}}</option>
                     @endforeach

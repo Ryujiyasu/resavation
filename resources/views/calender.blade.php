@@ -116,11 +116,12 @@
                     .then(function(response){
                         response.data.map(function(data){
                             console.log(data);
-                            console.log(data[0]["schedule_date"]+data[2]["start_time"]);
+                            console.log();
+
                             events.push({
                                     name: data[0]["name"],
-                                    start: new Date(data[0]["schedule_date"]),
-                                    end: new Date(data[0]["schedule_date"]),
+                                    start: new Date(data[3]),
+                                    end: new Date(data[4]),
                                     color: data[1]["color"],
                                     timed: true,
                                 }
