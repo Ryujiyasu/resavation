@@ -1,52 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Calendar</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+    <script>
+        $(function(){
+            $('#button').on("click",function(){
+                let member_id =$("#number").val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax('http://127.0.0.1:8000/getMember',
+                    {
+                        type:"post",
+                        data:{
+                            "member_id":member_id,
+                        }
+                    }).done(function(data){
+                    console.log(data.data.name);
+                    $('#name').val(data.data.name);
+                    $('#email').val(data.data.email);
+                    $('#tel').val(data.data.tel);
+                }).fail(function(data) {
+                    alert(data);
+                });;
+
+
+
+
+            });
+            $('.day').on({
+                'mouseenter': function(){$(this).addClass('focus')},
+                'mouseleave': function(){$(this).removeClass('focus')},
+                'click':function(){
+                    let day = $('.month').text().substr(0,4)+"-"+$('.month').text().substr(5,2)+"-"+( '00' + $(this).text() ).slice( -2 );
+
+                    $("#booking_calender").hide();
+                    $("#date").val(day);
+                    $("#date_row").show();
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax('/schedule/getData',
+                        {
+                            type:"get",
+                            data:{
+                                date:day,
+                                staff: $('#staff').val()
+                            }
+                        }).done(function(data){
+                        $schedules=data.schedules;
+                        $.each($schedules,function(index,item){
+                            $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                        })
+                    });
+
+                    $("#booking_schedule_choice").show();
+                    $("#submit").show();
+                }
+            });
+            $('#staff').on("change",function(){
+                $('#booking_calender').show();
+            });
+            $.ajax('/schedule/getData',
+                {
+                    type:"get",
+                    data:{
+                        date:$("#date").val(),
+                        staff: $('#staff').val()
+                    }
+                }).done(function(data){
+                $schedules=data.schedules;
+                $.each($schedules,function(index,item){
+                    $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                })
+            });
+        });
+
+    </script>
+    <script>
+
+    </script>
 </head>
 <body>
-<div class="container">
-    <form method="POST">
+@if (session('flash_message'))
+    <div class="flash_message">
+        {{ session('flash_message') }}
+    </div>
+@endif
+<form method="POST" >
+    <div class="container m-3">
+        <p>あなたの情報を教えてください。</p>
+        <p>会員番号または、<br>名前・メール・電話番号を入力してください</p>
+
         @csrf
-        <div class="form-group">
-            <label for="id">id</label>
-            <input class="form-control" id="id" value="{{$schedule->id}}" disabled name="id">
+        <div class="form-group row">
+            <label for="number" class="col-3 col-form-label">会員番号</label>
+            <div class="col-4">
+                <input name="number"  class="form-control" type="text" placeholder="000999" id="number">
+            </div>
+            <div class="col-5">
+                <button type="button" class="btn btn-primary" id="button">情報を取得</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="name">名前</label>
-            <input class="form-control" id="name" value="{{$schedule->name}}" name="name">
+        <div class="form-group row">
+            <label for="name" class="col-3 col-form-label">名前</label>
+            <div class="col-9">
+                <input name="name"  class="form-control" type="text" value="{{$schedule->name}}" id="name">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="tel">電話番号</label>
-            <input class="form-control" id="tel" value="{{$schedule->tel}}" name="tel">
+        <div class="form-group row">
+            <label for="email" class="col-3 col-form-label">メール</label>
+            <div class="col-9">
+                <input name="email" class="form-control" type="email" value="{{$schedule->email}}" id="email">
+            </div>
         </div>
+        <div class="form-group row">
+            <label for="tel" class="col-3 col-form-label">電話番号</label>
+            <div class="col-9">
+                <input class="form-control" type="tel" value="{{$schedule->tel}}" id="tel" name="tel">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="straff" class="col-3 col-form-label">スタッフ</label>
+            <div class="col-9">
+                <select id="staff" class="form-control">
+                    <option value=""></option>
+                    @foreach ($staffs as $staff)
+                        <option value="{{$staff->id}}"
+                        @if ($staff->id==$schedule->Staff()->first()->id) selected @endif >{{$staff->name}}</option>
+                    @endforeach
 
+                </select>
+            </div>
+        </div>
+        <div id="date_row"class="form-group row" >
+            <label for="date" class="col-3 col-form-label">日付</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="date" value="{{$schedule->schedule_date}}" name="schedule_date">
+            </div>
+        </div>
+        <div id="booking_schedule_choice" class="form-group row">
+            <label for="schedule_choice" class="col-3 col-form-label">時間</label>
+            <div class="col-9">
+                <select name="schedule_choice" id="schedule_choice"  class="form-control">
+                </select>
+            </div>
+        </div>
+        <input type="submit" id="submit" >
+    </div>
+    <div id="booking_calender" style="display:None;" class="flex-center position-ref">
+        <div class="content">
+            <div>
+                <a href="?ym={{ $prev }}">&lt;</a>
+                <span class="month">{{ $month }}</span>
+                <a href="?ym={{ $next }}">&gt;</a>
+            </div>
 
+            <table class="table table-bordered">
+                <tr>
+                    <th>日</th>
+                    <th>月</th>
+                    <th>火</th>
+                    <th>水</th>
+                    <th>木</th>
+                    <th>金</th>
+                    <th>土</th>
+                </tr>
+                @foreach ($weeks as $week)
+                    {!! $week !!}
+                @endforeach
+            </table>
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" value="{{$schedule->email}}" name="email">
         </div>
-        <div class="form-group">
-            <label for="cource">コース</label>
-            <input class="form-control" id="cource" value="{{$schedule->Cource()->first()->name}}" name="cource">
-        </div>
-        <div class="form-group">
-            <label for="staff">スタッフ</label>
-            <input class="form-control" id="staff" value="{{$schedule->Staff()->first()->name}}" name="staff">
-        </div>
-        <div class="form-group">
-            <label for="schedule_date">日付</label>
-            <input class="form-control" id="schedule_date" value="{{$schedule->schedule_date}}" name="schedule_date">
-        </div>
-        <button type="submit" class="btn btn-primary">変更</button>
-    </form>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        {{-- .content --}}
+    </div>
+    <div id="schedule" style="display: None"></div>
+</form>
 </body>
 </html>
-

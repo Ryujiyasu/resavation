@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Calendar;
+use App\MstStaff;
 use App\Schedule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -49,8 +51,17 @@ class HomeController extends Controller
     }
     public function editSchedule($id)
     {
+        $staffs = MstStaff::all();
         $schedule=Schedule::find($id);
-        return view('edit_schedule',['schedule'=>$schedule]);
+
+        return view('edit_schedule',[
+            "staffs"=>$staffs,
+            'weeks'         => Calendar::getWeeks(),
+            'month'         => Calendar::getMonth(),
+            'prev'          => Calendar::getPrev(),
+            'next'          => Calendar::getNext(),
+            "schedule"=>$schedule,
+        ]);
     }
 
     public function editScheduleComplete(Request $request)
