@@ -189,7 +189,7 @@
                             console.log();
 
                             events.push({
-                                    id:data[2]["id"],
+                                    id:data[0]["id"],
                                     name: data[0]["name"],
                                     start: new Date(data[3]),
                                     end: new Date(data[4]),

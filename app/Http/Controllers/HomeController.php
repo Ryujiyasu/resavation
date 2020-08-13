@@ -47,9 +47,24 @@ class HomeController extends Controller
 
         return $datas;
     }
-    public function editSchedule()
+    public function editSchedule($id)
     {
+        $schedule=Schedule::find($id);
+        return view('edit_schedule',['schedule'=>$schedule]);
+    }
 
-        return view('edit_schedule');
+    public function editScheduleComplete(Request $request)
+    {
+        $schedule=Schedule::find($request->id);
+        $schedule->name=$request->name;
+        $schedule->tel=$request->tel;
+        $schedule->email=$request->email;
+        $schedule->schedule_date=$request->schedule_date;
+        $schedule->save();
+
+
+        return redirect('/schedule/listing');
+
+
     }
 }
