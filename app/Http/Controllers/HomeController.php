@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Calendar;
+use App\MstSchedule;
 use App\MstStaff;
 use App\Schedule;
 use Illuminate\Http\Request;
@@ -54,7 +55,20 @@ class HomeController extends Controller
         $staffs = MstStaff::all();
         $schedule=Schedule::find($id);
 
+        $target_date = $schedule->schedule_date;
+
+        $staff=$schedule->Staff()->first();
+        $target_schedules=Schedule::where('schedule_date', "=", new Carbon($target_date))->get();
+        foreach($target_schedules as $target_schedule){
+            if( $target_schedule->Staff ==$staff){
+                if($target_schedule->Cource == $schedule->Cource()->first()){
+                    $schedule_info=$target_schedule;
+                }
+            }
+        }
+
         return view('edit_schedule',[
+            "schedule_info"=>$schedule_info,
             "staffs"=>$staffs,
             'weeks'         => Calendar::getWeeks(),
             'month'         => Calendar::getMonth(),
@@ -66,11 +80,17 @@ class HomeController extends Controller
 
     public function editScheduleComplete(Request $request)
     {
-        $schedule=Schedule::find($request->id);
+        $del_schedule=Schedule::find($request->id);
+        $del_schedule->name=null;
+        $del_schedule->tel=null;
+        $del_schedule->email=null;
+        $del_schedule->save();
+
+
+        $schedule=Schedule::find($request->schedule_choice);
         $schedule->name=$request->name;
         $schedule->tel=$request->tel;
         $schedule->email=$request->email;
-        $schedule->schedule_date=$request->schedule_date;
         $schedule->save();
 
 

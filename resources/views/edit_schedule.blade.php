@@ -84,7 +84,14 @@
                 }).done(function(data){
                 $schedules=data.schedules;
                 $.each($schedules,function(index,item){
-                    $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                    if (item.id == {{ $schedule_info->id }}){
+                        $("#schedule_choice").append("<option value="+item.id+" selected >"+item.name+"</option>");
+
+                    } else {
+                        $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+
+                    }
+
                 })
             });
         });
@@ -156,6 +163,7 @@
             <label for="schedule_choice" class="col-3 col-form-label">時間</label>
             <div class="col-9">
                 <select name="schedule_choice" id="schedule_choice"  class="form-control">
+
                 </select>
             </div>
         </div>
