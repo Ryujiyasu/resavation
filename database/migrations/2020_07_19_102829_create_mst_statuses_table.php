@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMstCourcesTable extends Migration
+class CreateMstStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateMstCourcesTable extends Migration
      */
     public function up()
     {
-        Schema::create('mst_cources', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('picture')->nullable();
+        Schema::create('mst_statuses', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
-            $table->text('detail')->nullable();
+            $table->boolean('busy_flg');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateMstCourcesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mst_cources');
+        Schema::dropIfExists('mst_statuses');
     }
 }

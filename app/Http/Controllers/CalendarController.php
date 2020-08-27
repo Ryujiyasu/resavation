@@ -77,15 +77,10 @@ class CalendarController extends Controller
         $date = $request->get("date");
         $staff=$request->get("staff");
         $target_date= new Carbon($date);
-        $schedules=MstSchedule::all();
-        foreach($schedules as $schedule){
-            Schedule::FirstOrCreate([
-                'mst_staff_id'=>$schedule->Staff->id,
-                'mst_cource_id'=>$schedule->Cource->id,
-                'schedule_date'=>$target_date]);
-        }
+
         $return=[];
-        $target_schedules=Schedule::where('schedule_date', "=", $target_date)->get();
+        $target_schedules=Schedule::where('schedule_date', "=", $target_date)
+                                    ->whereNull('name')->get();
         foreach($target_schedules as $target_schedule){
             if( $target_schedule->Staff->id ==$staff){
                 array_push($return,[

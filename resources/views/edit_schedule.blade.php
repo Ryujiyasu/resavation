@@ -84,15 +84,9 @@
                 }).done(function(data){
                 $schedules=data.schedules;
                 $.each($schedules,function(index,item){
-                    if (item.id == {{ $schedule_info->id }}){
-                        $("#schedule_choice").append("<option value="+item.id+" selected >"+item.name+"</option>");
-
-                    } else {
-                        $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
-
-                    }
-
+                     $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
                 })
+                $("#schedule_choice").append("<option value={{$schedule_info->id}} selected >{{$schedule_info->Cource()->first()->name}}</option>");
             });
         });
 

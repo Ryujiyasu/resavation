@@ -23,6 +23,8 @@ class CreateSchedulesTable extends Migration
             $table->integer('mst_staff_id')->unsigned();
             $table->foreign('mst_staff_id')->references('id')->on('mst_staff');
             $table->date('schedule_date');
+            $table->integer('mst_status_id')->default(1);
+            $table->foreign('mst_status_id')->references('id')->on('mst_statuses');
             $table->timestamps();
         });
     }

@@ -58,7 +58,9 @@ class HomeController extends Controller
         $target_date = $schedule->schedule_date;
 
         $staff=$schedule->Staff()->first();
-        $target_schedules=Schedule::where('schedule_date', "=", new Carbon($target_date))->get();
+        $target_schedules=Schedule::where('schedule_date', "=", new Carbon($target_date))
+                                    ->get();
+
         foreach($target_schedules as $target_schedule){
             if( $target_schedule->Staff ==$staff){
                 if($target_schedule->Cource == $schedule->Cource()->first()){
