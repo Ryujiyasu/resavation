@@ -71,7 +71,27 @@
                     $("#submit").show();
                 }
             });
+            if({{ $target_staff }} != 0){
+                $('#staff').val({{ $target_staff }});
+                let today = new Date();
+                console.log({{ $prev_month_check}});
+                if(today.getMonth()+2 < {{ $next_month_check }} | (today.getMonth()+2 ==13 && {{ $next_month_check }} ==1) ){
+                    $("#prev").attr("href", "?ym={{ $prev }}&staff={{ $target_staff }}");
+                    $("#next").remove()
+                }else if(today.getMonth() > {{ $prev_month_check}} |(today.getMonth()-2 == -1 && {{ $prev_month_check }} ==12)){
+                    $("#prev").remove();
+                    $("#next").attr("href", "?ym={{ $next }}&staff={{ $target_staff }}");
+                }else{
+                    $("#prev").attr("href", "?ym={{ $prev }}&staff={{ $target_staff }}");
+                    $("#next").attr("href", "?ym={{ $next }}&staff={{ $target_staff }}");
+                }
+
+                $('#booking_calender').show();
+
+            }
+
             $('#staff').on("change",function(){
+                $("#next").attr("href", "?ym={{ $next }}&staff="+$(this).val());
                 $('#booking_calender').show();
             });
         });
@@ -151,9 +171,9 @@
     <div id="booking_calender" style="display:None;" class="flex-center position-ref">
         <div class="content">
             <div>
-                <a href="?ym={{ $prev }}">&lt;</a>
+                <a id ="prev" href="?ym={{ $prev }}">&lt;</a>
                 <span class="month">{{ $month }}</span>
-                <a href="?ym={{ $next }}">&gt;</a>
+                <a id = "next" href="?ym={{ $next }}">&gt;</a>
             </div>
 
             <table class="table table-bordered">

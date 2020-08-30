@@ -22,11 +22,17 @@ class CalendarController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
         $staffs = MstStaff::all();
+        $target_staff = $request->input('staff',0);
+        $next_month_check =(integer)substr(Calendar::getNext(),5,2);
+        $prev_month_check =(integer)substr(Calendar::getPrev(),5,2);
 
         return view('booking',[
+            "next_month_check"=>$next_month_check,
+            "prev_month_check"=>$prev_month_check,
+            "target_staff" =>$target_staff,
             "staffs"=>$staffs,
             'weeks'         => Calendar::getWeeks(),
             'month'         => Calendar::getMonth(),
