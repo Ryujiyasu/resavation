@@ -27,6 +27,7 @@ class CalendarController extends Controller
         $staffs = MstStaff::all();
         $target_staff = $request->input('staff',0);
         $month_check =(integer)Calendar::getMonthCheck();
+        $schedules=MstSchedule::all();
         if ($month_check ==0){
             $month_check=11;
         }else{
@@ -126,6 +127,7 @@ class CalendarController extends Controller
         $member = Member::where("member_id",$id)->first();
 
         $schedules=Schedule::where('tel', "=", $member->tel)->get();
+
         return view('mySchedule',['schedules'=>$schedules]);
     }
 }

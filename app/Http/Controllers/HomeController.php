@@ -38,8 +38,8 @@ class HomeController extends Controller
         $datas=[];
         $schedules=Schedule::whereNotNull('name')->get();
         foreach ($schedules as $schedule){
-            $start_time=$schedule->Cource()->first()->start_time;
-            $end_time=$schedule->Cource()->first()->end_time;
+            $start_time=$schedule->Time()->first()->start_time;
+            $end_time=$schedule->Time()->first()->end_time;
 
             $Start = Carbon::parse(substr($schedule->schedule_date,0,10)." ".$start_time,'Asia/Tokyo');
             $End = Carbon::parse(substr($schedule->schedule_date,0,10)." ".$end_time,'Asia/Tokyo');

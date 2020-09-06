@@ -11,25 +11,28 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 </head>
 <body>
-<table class="table">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach ($schedules as $schedule)
+<div class="container">
+    <h4>スケジュール確認</h4>
+    <table class="table">
+        <thead>
         <tr>
-            <th scope="row">{{$schedule->schedule_date}}</th>
-            <td>{{$schedule->cource()->first()}}</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="col">日付</th>
+            <th scope="col">時間</th>
+            <th scope="col">コース名</th>
+            <th scope="col">スタッフ名</th>
         </tr>
-    @endforeach
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach ($schedules as $schedule)
+            <tr>
+                <th scope="row">{{substr($schedule->schedule_date,0,10)}}</th>
+                <td>{{$schedule->cource()->first()->name}}</td>
+                <td>{{$schedule->Time()->first()->name}}</td>
+                <td>{{$schedule->Staff()->first()->name}}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
