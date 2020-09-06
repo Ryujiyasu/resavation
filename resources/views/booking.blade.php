@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
     <script>
         $(function(){
+            $('#mySchedule').on('click',function(){
+                let member_id =$("#number").val();
+                window.location.href = '/getMySchedule/'+member_id;
+            });
             $('#button').on("click",function(){
                 let member_id =$("#number").val();
                 $.ajaxSetup({
@@ -71,19 +75,15 @@
                     $("#submit").show();
                 }
             });
-            if({{ $target_staff }} != 0){
+            if ( {{ $target_staff }} != 0 ){
                 $('#staff').val({{ $target_staff }});
                 let today = new Date();
-                console.log({{ $prev_month_check}});
-                if(today.getMonth()+2 < {{ $next_month_check }} | (today.getMonth()+2 ==13 && {{ $next_month_check }} ==1) ){
-                    $("#prev").attr("href", "?ym={{ $prev }}&staff={{ $target_staff }}");
-                    $("#next").remove()
-                }else if(today.getMonth() > {{ $prev_month_check}} |(today.getMonth()-2 == -1 && {{ $prev_month_check }} ==12)){
+                if(today.getMonth() == {{$month_check}}){
                     $("#prev").remove();
                     $("#next").attr("href", "?ym={{ $next }}&staff={{ $target_staff }}");
                 }else{
                     $("#prev").attr("href", "?ym={{ $prev }}&staff={{ $target_staff }}");
-                    $("#next").attr("href", "?ym={{ $next }}&staff={{ $target_staff }}");
+                    $("#next").remove();
                 }
 
                 $('#booking_calender').show();
@@ -91,6 +91,7 @@
             }
 
             $('#staff').on("change",function(){
+                $("#prev").remove();
                 $("#next").attr("href", "?ym={{ $next }}&staff="+$(this).val());
                 $('#booking_calender').show();
             });
@@ -118,8 +119,11 @@
             <div class="col-4">
                 <input name="number"  class="form-control" type="text" placeholder="000999" id="number">
             </div>
-            <div class="col-5">
+            <div class="col-3">
                 <button type="button" class="btn btn-primary" id="button">情報を取得</button>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-success" id="mySchedule">日程確認</button>
             </div>
         </div>
         <div class="form-group row">

@@ -26,12 +26,16 @@ class CalendarController extends Controller
     {
         $staffs = MstStaff::all();
         $target_staff = $request->input('staff',0);
-        $next_month_check =(integer)substr(Calendar::getNext(),5,2);
-        $prev_month_check =(integer)substr(Calendar::getPrev(),5,2);
+        $month_check =(integer)Calendar::getMonthCheck();
+        if ($month_check ==0){
+            $month_check=11;
+        }else{
+            $month_check-=1;
+        }
 
         return view('booking',[
-            "next_month_check"=>$next_month_check,
-            "prev_month_check"=>$prev_month_check,
+
+            "month_check"=>$month_check,
             "target_staff" =>$target_staff,
             "staffs"=>$staffs,
             'weeks'         => Calendar::getWeeks(),
@@ -114,5 +118,14 @@ class CalendarController extends Controller
         $schedule->save();
         return redirect('/')->with('flash_message', '予約完了致しました。');
 
+    }
+    public function mySchedule(Request $request,$id)
+    {
+
+
+        $member = Member::where("member_id",$id)->first();
+
+        $schedules=Schedule::where('tel', "=", $member->tel)->get();
+        return view('mySchedule',['schedules'=>$schedules]);
     }
 }

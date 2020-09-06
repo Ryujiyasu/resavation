@@ -76,6 +76,12 @@ class CalendarService
         return Carbon::parse(self::getYm_firstday())->format('Y年m月');
     }
 
+    public function getMonthCheck()
+    {
+        return Carbon::parse(self::getYm_firstday())->format('m');
+    }
+
+
     /**
      * prev 文字列を返却する
      *

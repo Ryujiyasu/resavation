@@ -22,9 +22,12 @@ class CreateSchedulesTable extends Migration
             $table->foreign('mst_cource_id')->references('id')->on('mst_cources');
             $table->integer('mst_staff_id')->unsigned();
             $table->foreign('mst_staff_id')->references('id')->on('mst_staff');
+            $table->integer('mst_time_id')->unsigned();
+            $table->foreign('mst_time_id')->references('id')->on('mst_times');
             $table->date('schedule_date');
             $table->integer('mst_status_id')->default(1);
             $table->foreign('mst_status_id')->references('id')->on('mst_statuses');
+
             $table->timestamps();
         });
     }

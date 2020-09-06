@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/getMySchedule/{id}', 'CalendarController@mySchedule')->name('mySchedule');
 Route::get('/', 'CalendarController@index')->name('calendar');
 Route::post('/', 'CalendarController@book')->name('calendarbook');
 

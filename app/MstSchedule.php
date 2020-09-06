@@ -16,4 +16,8 @@ class MstSchedule extends Model
     {
         return $this->belongsTo('App\MstCource','mst_cource_id');
     }
+    public function Time()
+    {
+        return $this->belongsTo('App\MstTime','mst_time_id');
+    }
 }

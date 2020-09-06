@@ -48,9 +48,11 @@ class MakeScheduleCommand extends Command
 
             foreach($schedules as $schedule){
                 Schedule::FirstOrCreate([
-                    'mst_staff_id'=>$schedule->Staff->id,
-                    'mst_cource_id'=>$schedule->Cource->id,
-                    'schedule_date'=>$targetDay]);
+                    'mst_staff_id'=>$schedule->Staff()->first()->id,
+                    'mst_cource_id'=>$schedule->Cource()->first()->id,
+                    'mst_time_id'=>$schedule->Time()->first()->id,
+                    'schedule_date'=>$targetDay,
+                    ]);
             }
         }
 
