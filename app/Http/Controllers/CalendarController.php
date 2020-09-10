@@ -11,6 +11,8 @@ use App\Member;
 use App\MstCource;
 use App\Schedule;
 use Carbon\Carbon;
+use App\Mail\reserveMail;
+use Mail;
 
 class CalendarController extends Controller
 {
@@ -77,7 +79,7 @@ class CalendarController extends Controller
         $schedule->email=$request->email;
         $schedule->save();
 
-        return redirect('/')->with('flash_message', '予約完了致しました。');
+        return redirect('/')->with('flash_message', '予約完了致しました。！');
     }
     public function scheduleGet(Request $request){
         $date = $request->get("date");
@@ -112,7 +114,11 @@ class CalendarController extends Controller
         $schedule->email=$request->get("email");
         $schedule->tel=$request->get("tel");
         $schedule->save();
-        return redirect('/')->with('flash_message', '予約完了致しました。');
+
+        $data = $schedule;
+        Mail::to('test@test.co.jp')->send(new reserveMail($data));
+
+        return redirect('/')->with('flash_message', '予約完了致しました。！！');
 
     }
 }
