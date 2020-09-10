@@ -27,15 +27,15 @@ class CalendarController extends Controller
         $staffs = MstStaff::all();
         $target_staff = $request->input('staff',0);
         $month_check =(integer)Calendar::getMonthCheck();
-        $schedules=MstSchedule::all();
+
         if ($month_check ==0){
             $month_check=11;
         }else{
             $month_check-=1;
         }
-
+        $cources = MstCource::all();
         return view('booking',[
-
+            "cources"=>$cources,
             "month_check"=>$month_check,
             "target_staff" =>$target_staff,
             "staffs"=>$staffs,
@@ -80,6 +80,10 @@ class CalendarController extends Controller
         $schedule->name=$request->name;
         $schedule->tel=$request->tel;
         $schedule->email=$request->email;
+        $cource=MstSchedule::find($request->cource_choice);
+        $schedule->cource=$cource;
+
+
         $schedule->save();
 
         return redirect('/')->with('flash_message', '予約完了致しました。');
@@ -87,6 +91,7 @@ class CalendarController extends Controller
     public function scheduleGet(Request $request){
         $date = $request->get("date");
         $staff=$request->get("staff");
+
         $target_date= new Carbon($date);
 
         $return=[];
@@ -95,7 +100,7 @@ class CalendarController extends Controller
         foreach($target_schedules as $target_schedule){
             if( $target_schedule->Staff->id ==$staff){
                 array_push($return,[
-                    "name"=>$target_schedule->Cource->name,
+                    "name"=>$target_schedule->Time()->first()->name,
                     "id"=>$target_schedule->id,
                 ]);
             }
@@ -113,9 +118,11 @@ class CalendarController extends Controller
     {
 
         $schedule=Schedule::find($request->get("schedule_choice"));
+
         $schedule->name=$request->get("name");
         $schedule->email=$request->get("email");
         $schedule->tel=$request->get("tel");
+        $schedule->mst_cource_id=$request->cource_choice;
         $schedule->save();
         return redirect('/')->with('flash_message', '予約完了致しました。');
 

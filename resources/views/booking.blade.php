@@ -72,6 +72,7 @@
                     });
 
                     $("#booking_schedule_choice").show();
+                    $('#booking_cource_choice').show();
                     $("#submit").show();
                 }
             });
@@ -167,6 +168,16 @@
             <div class="col-9">
                 <select name="schedule_choice" id="schedule_choice" class="form-control">
 
+                </select>
+            </div>
+        </div>
+        <div id="booking_cource_choice" style="display: None"class="form-group row">
+            <label for="cource_choice" class="col-3 col-form-label">コース</label>
+            <div class="col-9">
+                <select name="cource_choice" id="cource_choice" class="form-control">
+                    @foreach($cources as $cource)
+                    <option value="{{$cource->id}}">{{$cource->name}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

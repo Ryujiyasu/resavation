@@ -18,6 +18,7 @@ class CreateMstCourcesTable extends Migration
             $table->string('picture')->nullable();
             $table->string('name');
             $table->text('detail')->nullable();
+            $table->string('color');
         });
     }
 

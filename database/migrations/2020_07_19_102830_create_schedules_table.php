@@ -18,7 +18,7 @@ class CreateSchedulesTable extends Migration
             $table->string('name')->nullable();
             $table->string('tel',11)->nullable();
             $table->string('email')->nullable();
-            $table->integer('mst_cource_id')->unsigned();
+            $table->integer('mst_cource_id')->unsigned()->nullable();
             $table->foreign('mst_cource_id')->references('id')->on('mst_cources');
             $table->integer('mst_staff_id')->unsigned();
             $table->foreign('mst_staff_id')->references('id')->on('mst_staff');

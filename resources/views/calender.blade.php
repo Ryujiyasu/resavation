@@ -132,10 +132,9 @@
         data: () => ({
             test:"",
             type: 'month',
-            types: ['month', 'week', 'day', '4day','category'],
+            types: ['month', 'week', 'category'],
             mode: 'stack',
             modes: ['stack', 'column'],
-            categories: ['John Smith', 'Tori Walker'],
             weekday: [0, 1, 2, 3, 4, 5, 6],
             weekdays: [
                 { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
@@ -187,30 +186,18 @@
                     .get('/schedule/getDataJson')
                     .then(function(response){
                         response.data.map(function(data){
-                            console.log(data[3]);
-                            console.log(data[4]);
+
 
                             events.push({
                                     id:data[0]["id"],
                                     name: data[0]["name"],
                                     start: new Date(data[3]),
                                     end: new Date(data[4]),
-                                    color: data[1]["color"],
+                                    color: data[2]["color"],
                                     timed: true,
-                                    category: 'A',
+                                    category: data[1]["name"],
                                 }
                             )
-                            events.push({
-                                    id:data[0]["id"],
-                                    name: data[0]["name"],
-                                    start: new Date(data[3]),
-                                    end: new Date(data[4]),
-                                    color: data[1]["color"],
-                                    timed: true,
-                                    category: 'B',
-                                }
-                            )
-
                         });
                     })
                 this.events = events
