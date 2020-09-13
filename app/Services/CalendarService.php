@@ -53,7 +53,6 @@ class CalendarService
 
             }
 
-
             // 週の終わり、または月末
             if (($day_of_week % 7 === 6) || ($day === $days_in_month)) {
                 if ($day === $days_in_month) {
@@ -66,11 +65,7 @@ class CalendarService
         return $weeks;
     }
 
-    /**
-     * month 文字列を返却する
-     *
-     * @return string
-     */
+
     public function getMonth()
     {
         return Carbon::parse(self::getYm_firstday())->format('Y年m月');

@@ -56,6 +56,7 @@ class HomeController extends Controller
         $staffs = MstStaff::all();
         $schedule=Schedule::find($id);
 
+
         $target_date = $schedule->schedule_date;
 
         $staff=$schedule->Staff()->first();
@@ -89,7 +90,6 @@ class HomeController extends Controller
         $del_schedule->tel=null;
         $del_schedule->email=null;
         $del_schedule->save();
-
 
         $schedule=Schedule::find($request->time_choice);
         $schedule->name=$request->name;
