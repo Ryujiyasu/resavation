@@ -63,7 +63,7 @@
                         }).done(function(data){
                         $schedules=data.schedules;
                         $.each($schedules,function(index,item){
-                            $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                            $("#time_choice").append("<option value="+item.id+">"+item.name+"</option>");
                         })
                     });
 
@@ -71,22 +71,43 @@
                     $("#submit").show();
                 }
             });
+            $('#date').on('change',function(){
+                $.ajax('/schedule/getData',
+                    {
+                        type:"get",
+                        data:{
+                            date:$(this).val().split(" ")[0],
+                            staff: $('#staff').val()
+                        }
+                    }).done(function(data){
+                    $schedules=data.schedules;
+                    $("#time_choice").empty();
+                    $.each($schedules,function(index,item){
+                        $("#time_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                    })
+                });
+
+            });
+
             $('#staff').on("change",function(){
                 $('#booking_calender').show();
             });
+            console.log($("#date").val().split(" ")[0]);
+            console.log($('#staff').val());
             $.ajax('/schedule/getData',
                 {
                     type:"get",
                     data:{
-                        date:$("#date").val(),
+                        date:$("#date").val().split(" ")[0],
                         staff: $('#staff').val()
                     }
                 }).done(function(data){
+                console.log(data);
                 $schedules=data.schedules;
                 $.each($schedules,function(index,item){
-                     $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
+                    $("#time_choice").append("<option value="+item.id+">"+item.name+"</option>");
                 })
-                $("#schedule_choice").append("<option value={{$schedule_info->id}} selected >{{$schedule_info->Cource()->first()->name}}</option>");
+                $("#time_choice").append("<option value={{$schedule_info->id}} selected >{{$schedule_info->Time()->first()->name}}</option>");
             });
         });
 
@@ -153,11 +174,21 @@
                 <input type="text" class="form-control" id="date" value="{{$schedule->schedule_date}}" name="schedule_date">
             </div>
         </div>
-        <div id="booking_schedule_choice" class="form-group row">
-            <label for="schedule_choice" class="col-3 col-form-label">時間</label>
+        <div id="booking_time_choice" class="form-group row">
+            <label for="time_choice" class="col-3 col-form-label">時間</label>
             <div class="col-9">
-                <select name="schedule_choice" id="schedule_choice"  class="form-control">
+                <select name="time_choice" id="time_choice" class="form-control">
 
+                </select>
+            </div>
+        </div>
+        <div id="booking_cource_choice" class="form-group row">
+            <label for="cource_choice" class="col-3 col-form-label">コース</label>
+            <div class="col-9">
+                <select name="cource_choice" id="cource_choice" class="form-control">
+                    @foreach($cources as $cource)
+                        <option value="{{$cource->id}}">{{$cource->name}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

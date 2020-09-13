@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Calendar;
+use App\MstCource;
 use App\MstSchedule;
 use App\MstStaff;
 use App\Schedule;
@@ -68,8 +69,9 @@ class HomeController extends Controller
                 }
             }
         }
-
+        $cources = MstCource::all();
         return view('edit_schedule',[
+            "cources"=>$cources,
             "schedule_info"=>$schedule_info,
             "staffs"=>$staffs,
             'weeks'         => Calendar::getWeeks(),
@@ -89,10 +91,11 @@ class HomeController extends Controller
         $del_schedule->save();
 
 
-        $schedule=Schedule::find($request->schedule_choice);
+        $schedule=Schedule::find($request->time_choice);
         $schedule->name=$request->name;
         $schedule->tel=$request->tel;
         $schedule->email=$request->email;
+        $schedule->mst_cource_id=$request->cource_choice;
         $schedule->save();
 
 
