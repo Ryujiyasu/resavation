@@ -5,6 +5,8 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="{{ asset('css/schedule.css') }}">
+
 </head>
 <body>
 <div id="app">
@@ -73,7 +75,16 @@
                         :event-color="getEventColor"
                         @change="getEvents"
                         @click:event="showEvent"
-                    ></v-calendar>
+                    >
+                    <template #day-body="{ date,week }">
+                      <div
+                        class="v-current-time"
+                        :class="{ first: date === week[0].date }"
+                        :style="{ top: nowY }"
+                      ></div>
+                    </template>
+
+                  </v-calendar>
                     <v-menu
                         v-model="selectedOpen"
                         :close-on-content-click="false"
@@ -143,6 +154,7 @@
                 { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
             ],
             value: '',
+            ready: false,
             selectedOpen: false,
             selectedEvent: {},
 
@@ -150,7 +162,34 @@
             colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
             names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
         }),
+
+        computed: {
+            cal () {
+              return this.ready ? this.$refs.calendar : null
+            },
+            nowY () {
+              return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+            },
+          },
+          mounted () {
+            this.ready = true
+            this.scrollToTime()
+            this.updateTime()
+          },
+
         methods: {
+          getCurrentTime () {
+            return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+          },
+          scrollToTime () {
+            const time = this.getCurrentTime()
+            const first = Math.max(0, time - (time % 30) - 30)
+
+            this.cal.scrollToTime(first)
+          },
+          updateTime () {
+            setInterval(() => this.cal.updateTimes(), 60 * 1000)
+          },
             pageChange(id){
                 console.log(id);
                 const page='/schedule/edit/' +id;
@@ -213,4 +252,3 @@
 </script>
 </body>
 </html>
-
