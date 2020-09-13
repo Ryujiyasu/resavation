@@ -11,6 +11,8 @@ use App\Member;
 use App\MstCource;
 use App\Schedule;
 use Carbon\Carbon;
+use App\Mail\reserveMail;
+use Mail;
 
 class CalendarController extends Controller
 {
@@ -123,7 +125,12 @@ class CalendarController extends Controller
         $schedule->email=$request->get("email");
         $schedule->tel=$request->get("tel");
         $schedule->mst_cource_id=$request->cource_choice;
+        //dd($schedule);
         $schedule->save();
+
+        $data = $schedule;
+        Mail::to($schedule->email)->send(new reserveMail($data));
+
         return redirect('/')->with('flash_message', '予約完了致しました。');
 
     }
