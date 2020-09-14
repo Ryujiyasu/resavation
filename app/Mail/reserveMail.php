@@ -37,6 +37,8 @@ class reserveMail extends Mailable
               'name' => $this->data->name,
               'tel' => $this->data->tel,
               'date' => $this->data->schedule_date,
+              'cource' => $this->data->Cource()->first()->name,
+              'staff' => $this->data->Staff()->first()->name,
               ]);
     }
 }
