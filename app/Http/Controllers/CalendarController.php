@@ -125,7 +125,8 @@ class CalendarController extends Controller
         $schedule->email=$request->get("email");
         $schedule->tel=$request->get("tel");
         $schedule->mst_cource_id=$request->cource_choice;
-        //dd($schedule);
+
+      //  dd($schedule->Time()->first()->start_time);
         $schedule->save();
 
         $data = $schedule;
