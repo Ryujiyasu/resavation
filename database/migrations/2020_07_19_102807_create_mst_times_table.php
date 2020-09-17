@@ -14,7 +14,7 @@ class CreateMstTimesTable extends Migration
     public function up()
     {
         Schema::create('mst_times', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('name');
             $table->time('start_time');
             $table->time('end_time');

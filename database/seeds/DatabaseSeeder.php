@@ -52,5 +52,9 @@ class DatabaseSeeder extends Seeder
             ]);
           }
         }
+        DB::table('mst_statuses')->insert([
+            'name' => '予約可能',
+            'busy_flg' => 0,
+        ]);
     }
 }

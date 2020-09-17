@@ -14,7 +14,7 @@ class CreateMstCourcesTable extends Migration
     public function up()
     {
         Schema::create('mst_cources', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('picture')->nullable();
             $table->string('name');
             $table->text('detail')->nullable();

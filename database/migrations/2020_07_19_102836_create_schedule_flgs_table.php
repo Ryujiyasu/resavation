@@ -14,7 +14,7 @@ class CreateScheduleFlgsTable extends Migration
     public function up()
     {
         Schema::create('schedule_flgs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->date('date');
             $table->boolean('schedule_flg');
         });

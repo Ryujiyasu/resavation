@@ -14,7 +14,7 @@ class CreateMstStatusesTable extends Migration
     public function up()
     {
         Schema::create('mst_statuses', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
             $table->boolean('busy_flg');
         });
