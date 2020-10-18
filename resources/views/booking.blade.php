@@ -51,6 +51,8 @@
           :items="items"
           :rules="[v => !!v || 'スタッフを選択してください']"
           label="スタッフ"
+          item-text="name"
+          item-value="id"
           required
         ></v-select>
 
@@ -98,10 +100,12 @@
 </v-menu>
 
         <v-select
-          v-model="select"
-          :items="items"
+          v-model="timeSelect"
+          :items="timeItems"
           :rules="[v => !!v || '時間を選択してください']"
           label="時間"
+          item-text="name"
+          item-value="id"
           required
         ></v-select>
 
@@ -172,11 +176,13 @@
       ],
       select: null,
       items: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4',
+          {name:'Item 1',id:1},
+          {name:'Item 2',id:2},
+          {name:'Item 3',id:3},
+          {name:'Item 4',id:4},
       ],
+      timeSelect: null,
+      timeItems: [{name:'Item 1',id:1}],
       checkbox: false,
     }),
 
@@ -190,6 +196,34 @@
       resetValidation () {
         this.$refs.form.resetValidation()
       },
+    },
+    watch: {
+        select:{
+            handler: function ($post_select) {
+                console.log($post_select);
+
+                axios.get('/schedule/getData',{
+                    params: {
+                        date:'2020-10-19',
+                        staff: $post_select
+                    }
+                })
+                    .then(function (res) {
+                        this.timeItems=res.data.schedules;
+                    });
+            },
+
+        },
+        computed: {
+            eventedAction: function() {
+                console.log(this.items); //②ここではスコープが切れてlength 0
+                let list = this.items.slice();
+
+                return list;
+            }
+        }
+
+
     },
   })
 </script>
