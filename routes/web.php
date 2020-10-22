@@ -13,9 +13,11 @@ Route::get('schedule/getData', 'CalendarController@scheduleGet');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/getMember', 'CalendarController@memberGet');
 
+Route::get('schedule/getStaff/', 'HomeController@staffGet');
 Route::get('schedule/listing/', 'HomeController@index');
 Route::get('schedule/getDataJson/', 'HomeController@getDataJson');
 
+Route::get('listing/', 'HomeController@listing');
 
 Route::get('schedule/edit/{id}', 'HomeController@editSchedule');
 Route::post('schedule/edit/{id}', 'HomeController@editScheduleComplete');

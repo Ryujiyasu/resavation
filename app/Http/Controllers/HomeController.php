@@ -108,4 +108,8 @@ class HomeController extends Controller
       return view('listing',['schedules'=>$schedules]);
 
     }
+    public function staffGet(){
+      $staff = Mststaff::get();
+      return ['staffSelect'=>$staff];
+    }
 }

@@ -48,12 +48,13 @@
 
         <v-select
           v-model="staffSelect"
-          :items="items"
+          :items="staffItems"
           :rules="[v => !!v || 'スタッフを選択してください']"
           label="スタッフ"
           item-text="name"
           item-value="id"
           required
+          @click = "loadStaff"
           @change = "staffDateChoiced(staffSelect,date)"
         ></v-select>
 
@@ -162,12 +163,7 @@
         v => (v && v.length <= 11) || 'E-mail must be valid',
       ],
       staffSelect: null,
-      items: [
-          {name:'Item 1',id:1},
-          {name:'Item 2',id:2},
-          {name:'Item 3',id:3},
-          {name:'Item 4',id:4},
-      ],
+      staffItems: [],
       timeSelect: null,
       timeItems: ['スタッフを選択してください'],
       checkbox: false,
@@ -183,8 +179,19 @@
       resetValidation () {
         this.$refs.form.resetValidation()
       },
+      loadStaff(){
+        axios.get('/schedule/getStaff')
+        .then(function (res) {
+             vue.$data.staffItems=[];
+             res.data.staffSelect.forEach(element => {
+                 vue.$data.staffItems.push({
+                     id:element.id,
+                     name:element.name
+                 })
+             });
+         });
+      },
       staffDateChoiced($staff,$date){
-        console.log($staff,$date),
         axios.get('/schedule/getData',{
             params: {
                 date: $date,
@@ -209,7 +216,6 @@
                     });
                 };
             });
-
       }
     },
   {{--  watch: {
