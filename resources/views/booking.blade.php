@@ -47,57 +47,44 @@
         ></v-text-field>
 
         <v-select
-          v-model="select"
+          v-model="staffSelect"
           :items="items"
           :rules="[v => !!v || 'スタッフを選択してください']"
           label="スタッフ"
           item-text="name"
           item-value="id"
           required
+          @change = "staffDateChoiced(staffSelect,date)"
         ></v-select>
 
-        <v-menu
-  ref="menu"
-  v-model="menu"
-  :close-on-content-click="false"
-  :return-value.sync="date"
-  transition="scale-transition"
-  offset-y
-  min-width="290px"
->
-  <v-date-picker
-    v-model="date"
-    no-title
-    scrollable
-  >
-    <v-spacer></v-spacer>
-  </v-date-picker>
-</v-menu>
-<v-spacer></v-spacer>
 
-<v-menu
-  v-model="menu2"
-  :close-on-content-click="false"
-  :nudge-right="40"
-  transition="scale-transition"
-  offset-y
-  min-width="290px"
->
-  <template v-slot:activator="{ on, attrs }">
-    <v-text-field
+    </v-menu>
+    <v-spacer></v-spacer>
+
+    <v-menu
+      v-model="menu2"
+      :close-on-content-click="false"
+      :nudge-right="40"
+      transition="scale-transition"
+      offset-y
+      min-width="290px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-text-field
+        v-model="date"
+        label="Picker without buttons"
+        prepend-icon="mdi-calendar"
+        readonly
+        v-bind="attrs"
+        v-on="on"
+      ></v-text-field>
+    </template>
+    <v-date-picker
       v-model="date"
-      label="Picker without buttons"
-      prepend-icon="mdi-calendar"
-      readonly
-      v-bind="attrs"
-      v-on="on"
-    ></v-text-field>
-  </template>
-  <v-date-picker
-    v-model="date"
-    @input="menu2 = false"
-  ></v-date-picker>
-</v-menu>
+      @input="menu2 = false"
+        @change = "staffDateChoiced(staffSelect,date)"
+    ></v-date-picker>
+  </v-menu>
 
         <v-select
           v-model="timeSelect"
@@ -174,7 +161,7 @@
         v => !!v || '電話番号を入力してください',
         v => (v && v.length <= 11) || 'E-mail must be valid',
       ],
-      select: null,
+      staffSelect: null,
       items: [
           {name:'Item 1',id:1},
           {name:'Item 2',id:2},
@@ -182,7 +169,7 @@
           {name:'Item 4',id:4},
       ],
       timeSelect: null,
-      timeItems: [],
+      timeItems: ['スタッフを選択してください'],
       checkbox: false,
     }),
 
@@ -196,24 +183,61 @@
       resetValidation () {
         this.$refs.form.resetValidation()
       },
+      staffDateChoiced($staff,$date){
+        console.log($staff,$date),
+        axios.get('/schedule/getData',{
+            params: {
+                date: $date,
+                staff: $staff,
+            }
+        })
+           .then(function (res) {
+                vue.$data.timeItems=[];
+                if(res.data.schedules.length != 0){
+                  console.log(res.data.schedules.length);
+                  res.data.schedules.forEach(element => {
+                      vue.$data.timeItems.push({
+                          id:element.id,
+                          name:element.name
+                      })
+                  });
+                }else if(res.data.schedules.length == 0){
+                  console.log(res.data.schedules.length);
+                    vue.$data.timeItems.push({
+                        id:'null',
+                        name:'スタッフを選択してください'
+                    });
+                };
+            });
+
+      }
     },
-    watch: {
+  {{--  watch: {
         select:{
             handler: function ($post_select) {
                 axios.get('/schedule/getData',{
                     params: {
-                        date:'2020-10-19',
+                        date:'2020-10-22',
                         staff: $post_select
                     }
                 })
-                    .then(function (res) {
+                   .then(function (res) {
                         vue.$data.timeItems=[];
-                        res.data.schedules.forEach(element => {
+                        if(res.data.schedules.length != 0){
+                          console.log(res.data.schedules.length);
+                          res.data.schedules.forEach(element => {
+                              vue.$data.timeItems.push({
+                                  id:element.id,
+                                  name:element.name
+                              })
+                          });
+                        }else if(res.data.schedules.length == 0){
+                          console.log(res.data.schedules.length);
                             vue.$data.timeItems.push({
-                                id:element.id,
-                                name:element.name
-                            })
-                        });
+                                id:'null',
+                                name:'スタッフを選択してください'
+                            });
+                        };
                     });
             },
 
@@ -228,7 +252,7 @@
         }
 
 
-    },
+    },--}}
   })
 </script>
 
