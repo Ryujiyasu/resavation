@@ -103,4 +103,10 @@ class HomeController extends Controller
 
 
     }
+    public function listing(){
+
+      $schedules=Schedule::whereNotNull('name')->get();
+      return view('listing',['schedules'=>$schedules]);
+
+    }
 }

@@ -19,3 +19,5 @@ Route::get('schedule/getDataJson/', 'HomeController@getDataJson');
 
 Route::get('schedule/edit/{id}', 'HomeController@editSchedule');
 Route::post('schedule/edit/{id}', 'HomeController@editScheduleComplete');
+
+Route::get('/listing', 'HomeController@listing');

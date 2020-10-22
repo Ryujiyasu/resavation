@@ -21,15 +21,12 @@
                         single-line
                         hide-details
                     ></v-text-field>
-                    <v-text-field
-                        v-model="search2"
-                    ></v-text-field>
                 </v-card-title>
                     <v-data-table
                         :search="search"
                         :headers="headers"
                         :items="schedules"
-                        :sort-by="['日付', '時間','メール','電話','スタッフ','コース']"
+                        :sort-by="['日付','患者氏名', '時間','スタッフ','コース','メール','電話']"
                         :sort-desc="[false, true]"
                         multi-sort
                         class="elevation-1"
@@ -57,22 +54,26 @@
                         value: 'id',
                     },
                     { text: '日付', value: '日付' },
+                    { text: '患者氏名', value: '患者氏名' },
                     { text: '時間', value: '時間' },
-                    { text: 'メール', value: 'メール' },
-                    { text: '電話', value: '電話' },
                     { text: 'スタッフ', value: 'スタッフ' },
                     { text: 'コース', value: 'コース' },
+                    { text: 'メール', value: 'メール' },
+                    { text: '電話', value: '電話' },
+
                 ],
                 schedules: [
-                    @foreach ($schedules as $schedule)
+                   @foreach ($schedules as $schedule)
                         {
                             id: '{{$schedule->id}}',
                             日付: '{{$schedule->schedule_date}}',
-                            時間: '{{$schedule->name}}',
-                            メール: '{{$schedule->email}}',
-                            電話: '{{$schedule->tel}}',
+                            患者氏名: '{{$schedule->name}}',
+                            時間: '{{$schedule->time->start_time}}',
                             スタッフ: '{{$schedule->Staff->name}}',
-                            コース: '{{$schedule->Cource->name}}'
+                            コース: '{{$schedule->Cource->name}}',
+                            メール: '{{$schedule->email}}',
+                            電話: '{{$schedule->tel}}'
+
                         },
                     @endforeach
                 ],
@@ -82,4 +83,3 @@
 </script>
 </body>
 </html>
-

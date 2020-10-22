@@ -93,6 +93,7 @@ class CalendarController extends Controller
     public function scheduleGet(Request $request){
         $date = $request->get("date");
         $staff=$request->get("staff");
+        //dd($request);
 
         $target_date= new Carbon($date);
 

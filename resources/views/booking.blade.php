@@ -46,58 +46,58 @@
           required
         ></v-text-field>
 
-        <v-select
-          v-model="select"
-          :items="items"
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="date"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+        <v-date-picker
+          v-model="date"
+          no-title
+          scrollable
+        >
+    <v-spacer></v-spacer>
+  </v-date-picker>
+</v-menu>
+  <v-spacer></v-spacer>
+    <v-menu
+      v-model="menu2"
+      :close-on-content-click="false"
+      :nudge-right="40"
+      transition="scale-transition"
+      offset-y
+      min-width="290px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-text-field
+          v-model="date"
+          label="Picker without buttons"
+          prepend-icon="mdi-calendar"
+          readonly
+          v-bind="attrs"
+          v-on="on"
+        ></v-text-field>
+      </template>
+      <v-date-picker
+        v-model="date"
+        @input="menu2 = false"
+      ></v-date-picker>
+    </v-menu>
+      <v-select
+          v-model="staffSelect"
+          :items="staffsName"
           :rules="[v => !!v || 'スタッフを選択してください']"
           label="スタッフ"
           item-text="name"
           item-value="id"
           required
+          @change="staffChoiced"
         ></v-select>
 
-        <v-menu
-  ref="menu"
-  v-model="menu"
-  :close-on-content-click="false"
-  :return-value.sync="date"
-  transition="scale-transition"
-  offset-y
-  min-width="290px"
->
-  <v-date-picker
-    v-model="date"
-    no-title
-    scrollable
-  >
-    <v-spacer></v-spacer>
-  </v-date-picker>
-</v-menu>
-<v-spacer></v-spacer>
-
-<v-menu
-  v-model="menu2"
-  :close-on-content-click="false"
-  :nudge-right="40"
-  transition="scale-transition"
-  offset-y
-  min-width="290px"
->
-  <template v-slot:activator="{ on, attrs }">
-    <v-text-field
-      v-model="date"
-      label="Picker without buttons"
-      prepend-icon="mdi-calendar"
-      readonly
-      v-bind="attrs"
-      v-on="on"
-    ></v-text-field>
-  </template>
-  <v-date-picker
-    v-model="date"
-    @input="menu2 = false"
-  ></v-date-picker>
-</v-menu>
 
         <v-select
           v-model="timeSelect"
@@ -108,13 +108,6 @@
           item-value="id"
           required
         ></v-select>
-
-        <v-checkbox
-          v-model="checkbox"
-          :rules="[v => !!v || 'You must agree to continue!']"
-          label="Do you agree?"
-          required
-        ></v-checkbox>
 
         <v-btn
           :disabled="!valid"
@@ -138,6 +131,12 @@
           @click="resetValidation"
         >
           Reset Validation
+        </v-btn>
+        <v-btn
+          class="mr-4"
+          @click="submit"
+        >
+          submit
         </v-btn>
       </v-form>
     </v-row>
@@ -174,8 +173,8 @@
         v => !!v || '電話番号を入力してください',
         v => (v && v.length <= 11) || 'E-mail must be valid',
       ],
-      select: null,
-      items: [
+      staffSelect: null,
+      staffsName: [
           {name:'Item 1',id:1},
           {name:'Item 2',id:2},
           {name:'Item 3',id:3},
@@ -196,35 +195,42 @@
       resetValidation () {
         this.$refs.form.resetValidation()
       },
+      submit () {
+        this.$refs.form.validate()
+      },
+      staffChoiced () {
+        var self = axios.get('/schedule/getData?date=2020-09-19&staff=1')
+        console.log(self);
+      },
     },
-    watch: {
-        select:{
-            handler: function ($post_select) {
-                console.log($post_select);
-
-                axios.get('/schedule/getData',{
-                    params: {
-                        date:'2020-10-19',
-                        staff: $post_select
-                    }
-                })
-                    .then(function (res) {
-                        this.timeItems=res.data.schedules;
-                    });
-            },
-
-        },
-        computed: {
-            eventedAction: function() {
-                console.log(this.items); //②ここではスコープが切れてlength 0
-                let list = this.items.slice();
-
-                return list;
-            }
-        }
-
-
-    },
+    // watch: {
+    //     select:{
+    //         handler: function ($post_select) {
+    //             console.log($post_select);
+    //
+    //
+    //             //.then(response => (this.info = response));
+    //                 // .then(function (res) {
+    //                 console.log(this.response);
+    //                     this.timeItems= [{name:'Item 5',id:5},
+    //                                     {name:'Item 2',id:2},
+    //                                     {name:'Item 3',id:3},
+    //                                     {name:'Item 4',id:4},];
+    //                 // });
+    //         },
+    //
+    //     },
+    //     computed: {
+    //         eventedAction: function() {
+    //             console.log(this.items); //②ここではスコープが切れてlength 0
+    //             let list = this.items.slice();
+    //
+    //             return list;
+    //         }
+    //     }
+    //
+    //
+    // },
   })
 </script>
 
