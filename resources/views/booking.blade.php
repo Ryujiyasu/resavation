@@ -148,7 +148,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
-  new Vue({
+  const vue=new Vue({
     el: '#app',
     vuetify: new Vuetify(),
     data: () => ({
@@ -182,7 +182,7 @@
           {name:'Item 4',id:4},
       ],
       timeSelect: null,
-      timeItems: [{name:'Item 1',id:1}],
+      timeItems: [],
       checkbox: false,
     }),
 
@@ -200,8 +200,6 @@
     watch: {
         select:{
             handler: function ($post_select) {
-                console.log($post_select);
-
                 axios.get('/schedule/getData',{
                     params: {
                         date:'2020-10-19',
@@ -209,7 +207,13 @@
                     }
                 })
                     .then(function (res) {
-                        this.timeItems=res.data.schedules;
+                        vue.$data.timeItems=[];
+                        res.data.schedules.forEach(element => {
+                            vue.$data.timeItems.push({
+                                id:element.id,
+                                name:element.name
+                            })
+                        });
                     });
             },
 
