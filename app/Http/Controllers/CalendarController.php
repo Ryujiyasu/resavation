@@ -145,4 +145,8 @@ class CalendarController extends Controller
 
         return view('mySchedule',['schedules'=>$schedules]);
     }
+    public function staffGet(){
+      $staff = Mststaff::get();
+      return ['staffSelect'=>$staff];
+    }
 }
