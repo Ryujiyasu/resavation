@@ -145,7 +145,9 @@
         </v-btn>
         <v-btn
           type = "submit"
+          :disabled="invalid"
           color="primary"
+
         >
           submit
         </v-btn>
@@ -169,6 +171,7 @@
       menu2: false,
 
       valid: true,
+      invalid: false,
       name: '',
       nameRules: [
         v => !!v || 'お名前を入力してください',

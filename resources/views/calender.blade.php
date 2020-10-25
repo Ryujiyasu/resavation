@@ -68,7 +68,8 @@
                         v-model="value"
                         :weekdays="weekday"
                         :type="type"
-                        :categories="categories"
+                        category-show-all
+                        :categories="category"
                         :events="events"
                         :event-overlap-mode="mode"
                         :event-overlap-threshold="30"
@@ -157,10 +158,12 @@
             ready: false,
             selectedOpen: false,
             selectedEvent: {},
+            selectedElement: '',
 
             events: [],
             colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
             names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+            category: [],
         }),
 
         computed: {

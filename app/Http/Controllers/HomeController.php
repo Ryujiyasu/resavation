@@ -6,6 +6,7 @@ use App\Facades\Calendar;
 use App\MstCource;
 use App\MstSchedule;
 use App\MstStaff;
+use App\MstTime;
 use App\Schedule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -71,15 +72,19 @@ class HomeController extends Controller
             }
         }
         $cources = MstCource::all();
+      //dd($schedule_info);
         return view('edit_schedule',[
-            "cources"=>$cources,
-            "schedule_info"=>$schedule_info,
-            "staffs"=>$staffs,
-            'weeks'         => Calendar::getWeeks(),
-            'month'         => Calendar::getMonth(),
-            'prev'          => Calendar::getPrev(),
-            'next'          => Calendar::getNext(),
-            "schedule"=>$schedule,
+              "prev_date" => $schedule_info->schedule_date,
+              "name" => $schedule_info->name,
+              "email" => $schedule_info->email,
+              "tel" => $schedule_info->tel,
+              "staff" => MstStaff::find($schedule_info->mst_staff_id)->name,
+              "staff_id" => $schedule_info->mst_staff_id,
+              "cource" => MstCource::find($schedule_info->mst_cource_id)->name,
+              "cource_id" => $schedule_info->mst_cource_id,
+              "time" => MstTime::find($schedule_info->mst_time_id)->name,
+              "time_id" => $schedule_info->mst_time_id,
+            // "schedule"=>$schedule,
         ]);
     }
 
