@@ -154,12 +154,16 @@
     </v-form>
   </v-row>
   </v-app>
+
+
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+
 const vue=new Vue({
   el: '#app',
   vuetify: new Vuetify(),
@@ -187,12 +191,45 @@ const vue=new Vue({
       v => !!v || '電話番号を入力してください',
       v => (v && v.length <= 11) || 'E-mail must be valid',
     ],
-    staffSelect: '{{$staff}}',
-    staffItems: ['{{$staff}}'],
-    courceSelect: '{{$cource}}',
-    courceItems: ['{{$cource}}'],
-    timeSelect: null,
-    timeItems: ['スタッフを選択してください'],
+
+    staffSelect: {
+        id:{{$schedule->Staff()->first()->id}},
+        name:'{{$schedule->Staff()->first()->name}}'
+    },
+      staffItems: [
+              @foreach($staffs as $staff)
+          {
+              id:{{$staff->id}},
+              name:'{{$staff->name}}'
+          },
+          @endforeach
+      ],
+    courceSelect: {
+        id:{{$schedule->Cource()->first()->id}},
+        name:'{{$schedule->Cource()->first()->name}}'
+    },
+    courceItems: [
+        @foreach($cources as $cource)
+        {
+            id:{{$cource->id}},
+            name:'{{$cource->name}}'
+        },
+        @endforeach
+
+
+    ],
+    timeSelect: {
+        id:{{$schedule->Time()->first()->id}},
+        name:'{{$schedule->Time()->first()->name}}'
+    },
+    timeItems:[
+        @foreach($return as $time)
+        {
+            id:{{$time["id"]}},
+            name:'{{$time["name"]}}'
+        },
+        @endforeach
+    ],
   }),
 
   methods: {
@@ -218,8 +255,10 @@ const vue=new Vue({
        });
     },
     loadCource(){
+
       axios.get('/schedule/getCource')
       .then(function (res) {
+
            vue.$data.courceItems=[];
            res.data.courceSelect.forEach(element => {
                vue.$data.courceItems.push({

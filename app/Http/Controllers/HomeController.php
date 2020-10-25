@@ -55,14 +55,23 @@ class HomeController extends Controller
     public function editSchedule($id)
     {
         $staffs = MstStaff::all();
+
         $schedule=Schedule::find($id);
-
-
         $target_date = $schedule->schedule_date;
 
         $staff=$schedule->Staff()->first();
         $target_schedules=Schedule::where('schedule_date', "=", new Carbon($target_date))
                                     ->get();
+
+        $return=[];
+        foreach($target_schedules as $target_schedule){
+            if( $target_schedule->Staff()->first() ==$staff){
+                array_push($return,[
+                    "name"=>$target_schedule->Time()->first()->name,
+                    "id"=>$target_schedule->Time()->first()->id,
+                ]);
+            }
+        }
 
         foreach($target_schedules as $target_schedule){
             if( $target_schedule->Staff ==$staff){
@@ -84,7 +93,10 @@ class HomeController extends Controller
               "cource_id" => $schedule_info->mst_cource_id,
               "time" => MstTime::find($schedule_info->mst_time_id)->name,
               "time_id" => $schedule_info->mst_time_id,
-            // "schedule"=>$schedule,
+              "schedule"=>$schedule,
+              "staffs"=>$staffs,
+              "cources"=>$cources,
+              "return"=>$return,
         ]);
     }
 
