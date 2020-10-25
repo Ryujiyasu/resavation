@@ -13,20 +13,28 @@
 
 </head>
 <body>
-
+  @if (session('flash_message'))
+      <div class="flash_message">
+          {{ session('flash_message') }}
+      </div>
+  @endif
 
   <div id="app">
     <v-app id="inspire">
       </v-row>
       <v-form
         ref="form"
+        method="POST"
         v-model="valid"
         lazy-validation
+        action = "/form"
       >
+      @csrf
         <v-text-field
           v-model="name"
           :counter="10"
           :rules="nameRules"
+          name = "name"
           label="お名前"
           required
         ></v-text-field>
@@ -34,6 +42,7 @@
         <v-text-field
           v-model="email"
           :rules="emailRules"
+          name = "email"
           label="Eメールアドレス"
           required
         ></v-text-field>
@@ -42,6 +51,7 @@
           v-model="tel"
           :counter="11"
           :rules="telRules"
+          name = "tel"
           label="電話番号"
           required
         ></v-text-field>
@@ -55,6 +65,18 @@
           item-value="id"
           required
           @click = "loadStaff"
+          @change = "staffDateChoiced(staffSelect,date)"
+        ></v-select>
+        <v-select
+          v-model="courceSelect"
+          :items="courceItems"
+          :rules="[v => !!v || '施術コースを選択してください']"
+          label="施術コース"
+          name="cource_choice"
+          item-text="name"
+          item-value="id"
+          required
+          @click = "loadCource"
           @change = "staffDateChoiced(staffSelect,date)"
         ></v-select>
 
@@ -73,7 +95,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-text-field
         v-model="date"
-        label="Picker without buttons"
+        label="日付選択"
         prepend-icon="mdi-calendar"
         readonly
         v-bind="attrs"
@@ -92,17 +114,11 @@
           :items="timeItems"
           :rules="[v => !!v || '時間を選択してください']"
           label="時間"
+          name = "schedule_choice"
           item-text="name"
           item-value="id"
           required
         ></v-select>
-
-        <v-checkbox
-          v-model="checkbox"
-          :rules="[v => !!v || 'You must agree to continue!']"
-          label="Do you agree?"
-          required
-        ></v-checkbox>
 
         <v-btn
           :disabled="!valid"
@@ -126,6 +142,12 @@
           @click="resetValidation"
         >
           Reset Validation
+        </v-btn>
+        <v-btn
+          type = "submit"
+          color="primary"
+        >
+          submit
         </v-btn>
       </v-form>
     </v-row>
@@ -164,9 +186,10 @@
       ],
       staffSelect: null,
       staffItems: [],
+      courceSelect: null,
+      courceItems: ['施術コースを選択してください'],
       timeSelect: null,
       timeItems: ['スタッフを選択してください'],
-      checkbox: false,
     }),
 
     methods: {
@@ -185,6 +208,18 @@
              vue.$data.staffItems=[];
              res.data.staffSelect.forEach(element => {
                  vue.$data.staffItems.push({
+                     id:element.id,
+                     name:element.name
+                 })
+             });
+         });
+      },
+      loadCource(){
+        axios.get('/schedule/getCource')
+        .then(function (res) {
+             vue.$data.courceItems=[];
+             res.data.courceSelect.forEach(element => {
+                 vue.$data.courceItems.push({
                      id:element.id,
                      name:element.name
                  })
@@ -218,47 +253,6 @@
             });
       }
     },
-  {{--  watch: {
-        select:{
-            handler: function ($post_select) {
-                axios.get('/schedule/getData',{
-                    params: {
-                        date:'2020-10-22',
-                        staff: $post_select
-                    }
-                })
-                   .then(function (res) {
-                        vue.$data.timeItems=[];
-                        if(res.data.schedules.length != 0){
-                          console.log(res.data.schedules.length);
-                          res.data.schedules.forEach(element => {
-                              vue.$data.timeItems.push({
-                                  id:element.id,
-                                  name:element.name
-                              })
-                          });
-                        }else if(res.data.schedules.length == 0){
-                          console.log(res.data.schedules.length);
-                            vue.$data.timeItems.push({
-                                id:'null',
-                                name:'スタッフを選択してください'
-                            });
-                        };
-                    });
-            },
-
-        },
-        computed: {
-            eventedAction: function() {
-                console.log(this.items); //②ここではスコープが切れてlength 0
-                let list = this.items.slice();
-
-                return list;
-            }
-        }
-
-
-    },--}}
   })
 </script>
 
