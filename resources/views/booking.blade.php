@@ -4,212 +4,292 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
     <title>Calendar</title>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
-    <script>
-        $(function(){
-            $('#mySchedule').on('click',function(){
-                let member_id =$("#number").val();
-                window.location.href = '/getMySchedule/'+member_id;
-            });
-            $('#button').on("click",function(){
-                let member_id =$("#number").val();
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax('http://127.0.0.1:8000/getMember',
-                    {
-                        type:"post",
-                        data:{
-                            "member_id":member_id,
-                        }
-                    }).done(function(data){
-                    console.log(data.data.name);
-                    $('#name').val(data.data.name);
-                    $('#email').val(data.data.email);
-                    $('#tel').val(data.data.tel);
-                }).fail(function(data) {
-                    alert(data);
-                });;
-
-
-
-
-            });
-            $('.day').on({
-                'mouseenter': function(){$(this).addClass('focus')},
-                'mouseleave': function(){$(this).removeClass('focus')},
-                'click':function(){
-                    let day = $('.month').text().substr(0,4)+"-"+$('.month').text().substr(5,2)+"-"+( '00' + $(this).text() ).slice( -2 );
-
-                    $("#booking_calender").hide();
-                    $("#date").val(day);
-                    $("#date_row").show();
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax('/schedule/getData',
-                        {
-                            type:"get",
-                            data:{
-                                date:day,
-                                staff: $('#staff').val()
-                            }
-                        }).done(function(data){
-                        $schedules=data.schedules;
-                        $.each($schedules,function(index,item){
-                            $("#schedule_choice").append("<option value="+item.id+">"+item.name+"</option>");
-                        })
-                    });
-
-                    $("#booking_schedule_choice").show();
-                    $('#booking_cource_choice').show();
-                    $("#submit").show();
-                }
-            });
-            if ( {{ $target_staff }} != 0 ){
-                $('#staff').val({{ $target_staff }});
-                let today = new Date();
-                if(today.getMonth() == {{$month_check}}){
-                    $("#prev").remove();
-                    $("#next").attr("href", "?ym={{ $next }}&staff={{ $target_staff }}");
-                }else{
-                    $("#prev").attr("href", "?ym={{ $prev }}&staff={{ $target_staff }}");
-                    $("#next").remove();
-                }
-
-                $('#booking_calender').show();
-
-            }
-
-            $('#staff').on("change",function(){
-                $("#prev").remove();
-                $("#next").attr("href", "?ym={{ $next }}&staff="+$(this).val());
-                $('#booking_calender').show();
-            });
-        });
-
-    </script>
-    <script>
-
-    </script>
 </head>
 <body>
-@if (session('flash_message'))
-    <div class="flash_message">
-        {{ session('flash_message') }}
-    </div>
-@endif
-<form method="POST" >
-    <div class="container m-3">
-        <p>あなたの情報を教えてください。</p>
-        <p>会員番号または、<br>名前・メール・電話番号を入力してください</p>
+  @if (session('flash_message'))
+      <div class="flash_message">
+          {{ session('flash_message') }}
+      </div>
+  @endif
 
-        @csrf
-        <div class="form-group row">
-            <label for="number" class="col-3 col-form-label">会員番号</label>
-            <div class="col-4">
-                <input name="number"  class="form-control" type="text" placeholder="000999" id="number">
-            </div>
-            <div class="col-3">
-                <button type="button" class="btn btn-primary" id="button">情報を取得</button>
-            </div>
-            <div class="col-2">
-                <button type="button" class="btn btn-success" id="mySchedule">日程確認</button>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="name" class="col-3 col-form-label">名前</label>
-            <div class="col-9">
-                <input name="name"  class="form-control" type="text" placeholder="田中太郎" id="name">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="email" class="col-3 col-form-label">メール</label>
-            <div class="col-9">
-                <input name="email" class="form-control" type="email" placeholder="mail@gmail.com" id="email">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="tel" class="col-3 col-form-label">電話番号</label>
-            <div class="col-9">
-                <input class="form-control" type="tel" placeholder="09099999999" id="tel" name="tel">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="straff" class="col-3 col-form-label">スタッフ</label>
-            <div class="col-9">
-                <select id="staff" class="form-control">
-                    <option value="">------</option>
-                    @foreach ($staffs as $staff)
-                        <option value="{{$staff->id}}">{{$staff->name}}</option>
-                    @endforeach
+  <div id="app">
+    <v-app id="inspire">
+      <v-container>
 
-                </select>
-            </div>
-        </div>
-        <div id="date_row"class="form-group row" style="display:None;">
-            <label for="date" class="col-3 col-form-label">日付</label>
-            <div class="col-9">
-                <input type="text" class="form-control" id="date" name="date">
-            </div>
-        </div>
-        <div id="booking_schedule_choice" style="display: None"class="form-group row">
-            <label for="schedule_choice" class="col-3 col-form-label">時間</label>
-            <div class="col-9">
-                <select name="schedule_choice" id="schedule_choice" class="form-control">
 
-                </select>
-            </div>
-        </div>
-        <div id="booking_cource_choice" style="display: None"class="form-group row">
-            <label for="cource_choice" class="col-3 col-form-label">コース</label>
-            <div class="col-9">
-                <select name="cource_choice" id="cource_choice" class="form-control">
-                    @foreach($cources as $cource)
-                    <option value="{{$cource->id}}">{{$cource->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <input type="submit" id="submit" style="display:None">
-    </div>
-    <div id="booking_calender" style="display:None;" class="flex-center position-ref">
-        <div class="content">
-            <div>
-                <a id ="prev" href="?ym={{ $prev }}">&lt;</a>
-                <span class="month">{{ $month }}</span>
-                <a id = "next" href="?ym={{ $next }}">&gt;</a>
-            </div>
 
-            <table class="table table-bordered">
-                <tr>
-                    <th>日</th>
-                    <th>月</th>
-                    <th>火</th>
-                    <th>水</th>
-                    <th>木</th>
-                    <th>金</th>
-                    <th>土</th>
-                </tr>
-                @foreach ($weeks as $week)
-                    {!! $week !!}
-                @endforeach
-            </table>
+        <v-card
+  class="mx-auto my-6"
+  max-width="374"
+>
+  <template slot="progress">
+    <v-progress-linear
+      color="deep-purple"
+      height="10"
+      indeterminate
+    ></v-progress-linear>
+  </template>
 
-        </div>
-        {{-- .content --}}
-    </div>
-    <div id="schedule" style="display: None"></div>
-</form>
+  <v-img
+    height="200"
+    src="{{ asset('image/forest.jpg') }}"
+  ></v-img>
+
+  <v-card-title>●●接骨院</v-card-title>
+
+  <v-card-text>
+    <v-row
+      align="center"
+      class="mx-0"
+    >
+    </v-row>
+
+    <div>てすと</div>
+  </v-card-text>
+
+  <v-divider class="mx-4"></v-divider>
+
+  <v-card-title>予約フォーム</v-card-title>
+
+  <v-card-text>
+    <v-row
+
+    >
+      <v-form
+        ref="form"
+        method="POST"
+        v-model="valid"
+        lazy-validation
+        action = "/form"
+        class="col-md"
+      >
+      @csrf
+        <v-text-field
+          v-model="name"
+          :counter="10"
+          :rules="nameRules"
+          name = "name"
+          label="お名前"
+          required
+
+        ></v-text-field>
+
+        <v-text-field
+          v-model="email"
+          :rules="emailRules"
+          name = "email"
+          label="Eメールアドレス"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model="tel"
+          :counter="11"
+          :rules="telRules"
+          name = "tel"
+          label="電話番号"
+          required
+        ></v-text-field>
+
+        <v-select
+          v-model="staffSelect"
+          :items="staffItems"
+          :rules="[v => !!v || 'スタッフを選択してください']"
+          label="スタッフ"
+          item-text="name"
+          item-value="id"
+          required
+          @click = "loadStaff"
+          @change = "staffDateChoiced(staffSelect,date)"
+        ></v-select>
+        <v-select
+          v-model="courceSelect"
+          :items="courceItems"
+          :rules="[v => !!v || '施術コースを選択してください']"
+          label="施術コース"
+          name="cource_choice"
+          item-text="name"
+          item-value="id"
+          required
+          @click = "loadCource"
+          @change = "staffDateChoiced(staffSelect,date)"
+        ></v-select>
+
+        <v-spacer></v-spacer>
+
+        <v-menu
+          v-model="menu2"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="date"
+              label="日付選択"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="date"
+            @input="menu2 = false"
+            @change = "staffDateChoiced(staffSelect,date)"
+          ></v-date-picker>
+        </v-menu>
+
+        <v-select
+          v-model="timeSelect"
+          :items="timeItems"
+          :rules="[v => !!v || '時間を選択してください']"
+          label="時間"
+          name = "schedule_choice"
+          item-text="name"
+          item-value="id"
+          required
+        ></v-select>
+
+        <v-btn
+          color="error"
+          class="mr-4"
+          @click="reset"
+        >
+        クリア
+        </v-btn>
+
+        <v-btn
+          type = "submit"
+          :disabled="invalid"
+          color="primary"
+          class="mr-4"
+
+        >
+        予約
+        </v-btn>
+      </v-form>
+    </v-row>
+  </v-card-text>
+</v-card>
+      </v-container>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+  const vue=new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data: () => ({
+
+      date: new Date().toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
+
+      valid: true,
+      invalid: false,
+      name: '',
+      nameRules: [
+        v => !!v || 'お名前を入力してください',
+        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'Eメールアドレスを入力してください',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      tel: '',
+      telRules: [
+        v => !!v || '電話番号を入力してください',
+        v => (v && v.length <= 11) || 'E-mail must be valid',
+      ],
+      staffSelect: null,
+      staffItems: [],
+      courceSelect: null,
+      courceItems: ['施術コースを選択してください'],
+      timeSelect: null,
+      timeItems: ['スタッフを選択してください'],
+    }),
+
+    methods: {
+      validate () {
+        this.$refs.form.validate()
+      },
+      reset () {
+        this.$refs.form.reset()
+      },
+      resetValidation () {
+        this.$refs.form.resetValidation()
+      },
+      loadStaff(){
+        axios.get('/schedule/getStaff')
+        .then(function (res) {
+             vue.$data.staffItems=[];
+             res.data.staffSelect.forEach(element => {
+                 vue.$data.staffItems.push({
+                     id:element.id,
+                     name:element.name
+                 })
+             });
+         });
+      },
+      loadCource(){
+        axios.get('/schedule/getCource')
+        .then(function (res) {
+             vue.$data.courceItems=[];
+             res.data.courceSelect.forEach(element => {
+                 vue.$data.courceItems.push({
+                     id:element.id,
+                     name:element.name
+                 })
+             });
+         });
+      },
+      staffDateChoiced($staff,$date){
+        axios.get('/schedule/getData',{
+            params: {
+                date: $date,
+                staff: $staff,
+            }
+        })
+           .then(function (res) {
+                vue.$data.timeItems=[];
+                if(res.data.schedules.length != 0){
+                  console.log(res.data.schedules.length);
+                  res.data.schedules.forEach(element => {
+                      vue.$data.timeItems.push({
+                          id:element.id,
+                          name:element.name
+                      })
+                  });
+                }else if(res.data.schedules.length == 0){
+                  console.log(res.data.schedules.length);
+                    vue.$data.timeItems.push({
+                        id:'null',
+                        name:'スタッフを選択してください'
+                    });
+                };
+            });
+      }
+    },
+  })
+</script>
+
+
 </body>
+<footer style="text-align:center">Send Grid</footer>
+
 </html>

@@ -75,21 +75,7 @@ class CalendarController extends Controller
         $schedule=Schedule::find($id);
         return view('booking',['schedule'=>$schedule]);
     }
-    public function booking_done(Request $request)
-    {
 
-        $schedule=Schedule::find($request->schedule);
-        $schedule->name=$request->name;
-        $schedule->tel=$request->tel;
-        $schedule->email=$request->email;
-        $cource=MstSchedule::find($request->cource_choice);
-        $schedule->cource=$cource;
-
-
-        $schedule->save();
-
-        return redirect('/')->with('flash_message', '予約完了致しました。');
-    }
     public function scheduleGet(Request $request){
         $date = $request->get("date");
         $staff=$request->get("staff");
@@ -116,9 +102,9 @@ class CalendarController extends Controller
         $member = Member::where("member_id",$member_id)->first();
         return ['data'=>$member];
     }
+
     public function book(Request $request)
     {
-
         $schedule=Schedule::find($request->get("schedule_choice"));
 
         $schedule->name=$request->get("name");
@@ -144,5 +130,13 @@ class CalendarController extends Controller
         $schedules=Schedule::where('tel', "=", $member->tel)->get();
 
         return view('mySchedule',['schedules'=>$schedules]);
+    }
+    public function staffGet(){
+      $staff = Mststaff::get();
+      return ['staffSelect'=>$staff];
+    }
+    public function courceGet(){
+      $cource = MstCource::get();
+      return ['courceSelect'=>$cource];
     }
 }
