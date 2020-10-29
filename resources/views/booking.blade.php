@@ -26,8 +26,7 @@
 
 
         <v-card
-  :loading="loading"
-  class="mx-auto my-12"
+  class="mx-auto my-6"
   max-width="374"
 >
   <template slot="progress">
@@ -39,8 +38,8 @@
   </template>
 
   <v-img
-    height="250"
-    src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+    height="200"
+    src="{{ asset('image/forest.jpg') }}"
   ></v-img>
 
   <v-card-title>●●接骨院</v-card-title>
@@ -61,7 +60,7 @@
 
   <v-card-text>
     <v-row
-      class="mx-12"
+
     >
       <v-form
         ref="form"
@@ -69,6 +68,7 @@
         v-model="valid"
         lazy-validation
         action = "/form"
+        class="col-md"
       >
       @csrf
         <v-text-field
@@ -78,6 +78,7 @@
           name = "name"
           label="お名前"
           required
+
         ></v-text-field>
 
         <v-text-field
@@ -172,6 +173,7 @@
           :disabled="invalid"
           color="primary"
           class="mr-4"
+
         >
         予約
         </v-btn>
