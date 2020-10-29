@@ -21,7 +21,48 @@
 
   <div id="app">
     <v-app id="inspire">
-      </v-row>
+      <v-container>
+
+
+
+        <v-card
+  :loading="loading"
+  class="mx-auto my-12"
+  max-width="374"
+>
+  <template slot="progress">
+    <v-progress-linear
+      color="deep-purple"
+      height="10"
+      indeterminate
+    ></v-progress-linear>
+  </template>
+
+  <v-img
+    height="250"
+    src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+  ></v-img>
+
+  <v-card-title>●●接骨院</v-card-title>
+
+  <v-card-text>
+    <v-row
+      align="center"
+      class="mx-0"
+    >
+    </v-row>
+
+    <div>てすと</div>
+  </v-card-text>
+
+  <v-divider class="mx-4"></v-divider>
+
+  <v-card-title>予約フォーム</v-card-title>
+
+  <v-card-text>
+    <v-row
+      class="mx-12"
+    >
       <v-form
         ref="form"
         method="POST"
@@ -80,34 +121,32 @@
           @change = "staffDateChoiced(staffSelect,date)"
         ></v-select>
 
+        <v-spacer></v-spacer>
 
-    </v-menu>
-    <v-spacer></v-spacer>
-
-    <v-menu
-      v-model="menu2"
-      :close-on-content-click="false"
-      :nudge-right="40"
-      transition="scale-transition"
-      offset-y
-      min-width="290px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-text-field
-        v-model="date"
-        label="日付選択"
-        prepend-icon="mdi-calendar"
-        readonly
-        v-bind="attrs"
-        v-on="on"
-      ></v-text-field>
-    </template>
-    <v-date-picker
-      v-model="date"
-      @input="menu2 = false"
-        @change = "staffDateChoiced(staffSelect,date)"
-    ></v-date-picker>
-  </v-menu>
+        <v-menu
+          v-model="menu2"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="date"
+              label="日付選択"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="date"
+            @input="menu2 = false"
+            @change = "staffDateChoiced(staffSelect,date)"
+          ></v-date-picker>
+        </v-menu>
 
         <v-select
           v-model="timeSelect"
@@ -121,38 +160,26 @@
         ></v-select>
 
         <v-btn
-          :disabled="!valid"
-          color="success"
-          class="mr-4"
-          @click="validate"
-        >
-          Validate
-        </v-btn>
-
-        <v-btn
           color="error"
           class="mr-4"
           @click="reset"
         >
-          Reset Form
+        クリア
         </v-btn>
 
-        <v-btn
-          color="warning"
-          @click="resetValidation"
-        >
-          Reset Validation
-        </v-btn>
         <v-btn
           type = "submit"
           :disabled="invalid"
           color="primary"
-
+          class="mr-4"
         >
-          submit
+        予約
         </v-btn>
       </v-form>
     </v-row>
+  </v-card-text>
+</v-card>
+      </v-container>
     </v-app>
   </div>
 
