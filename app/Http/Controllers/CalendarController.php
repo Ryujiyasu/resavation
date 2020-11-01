@@ -118,7 +118,7 @@ class CalendarController extends Controller
         $data = $schedule;
         Mail::to($schedule->email)->send(new reserveMail($data));
 
-        return redirect('/')->with('flash_message', '予約完了致しました。');
+        return $data; //予約完了
 
     }
     public function mySchedule(Request $request,$id)

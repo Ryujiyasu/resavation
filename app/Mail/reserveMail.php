@@ -29,9 +29,10 @@ class reserveMail extends Mailable
      */
     public function build()
     {
+      
       return $this->view('mails.noticeMail')
           ->text('mails.noticeMail')
-          ->subject('ご予約承りました。')
+          ->subject('【●●接骨院】ご予約承りました')
           ->with([
               'text' => $this->data,
               'name' => $this->data->name,
