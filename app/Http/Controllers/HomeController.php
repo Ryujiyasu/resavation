@@ -47,7 +47,13 @@ class HomeController extends Controller
             $End = Carbon::parse(substr($schedule->schedule_date,0,10)." ".$end_time,'Asia/Tokyo');
 
 
-            $datas[]=[$schedule,$schedule->Staff()->first(),$schedule->Cource()->first(),$Start,$End];
+            $datas[]=[
+                      $schedule,
+                      $schedule->Staff()->first(),
+                      $schedule->Cource()->first(),
+                      $Start,
+                      $End
+                      ];
         }
 
         return $datas;

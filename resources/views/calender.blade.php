@@ -110,7 +110,7 @@
 
                             </v-toolbar>
                             <v-card-text>
-                                <span v-html="selectedEvent.start"></span>
+                                <span v-html="selectedEvent.start"></span><br>
                                 <span v-html="selectedEvent.end"></span>
                             </v-card-text>
                             <v-card-actions>
@@ -151,8 +151,8 @@
             weekdays: [
                 { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
                 { text: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
-                { text: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
-                { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
+
+
             ],
             value: '',
             ready: false,
@@ -215,8 +215,7 @@
                 console.log(this.selectedEvent)
 
                 nativeEvent.stopPropagation()
-
-                },
+            },
 
             getEvents ({ start, end }) {
                 const events = []
@@ -228,7 +227,7 @@
                     .get('/schedule/getDataJson')
                     .then(function(response){
                         response.data.map(function(data){
-
+                          console.log(response.data)
 
                             events.push({
                                     id:data[0]["id"],

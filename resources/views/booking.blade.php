@@ -130,6 +130,10 @@
                 </template>
                 <v-date-picker
                   v-model="date"
+                  :landscape="landscape"
+                  :reactive="reactive"
+                  locale="jp-ja"
+                  :day-format="date => new Date(date).getDate()"
                   @input="menu2 = false"
                   @change = "staffDateChoiced(staffSelect,date)"
                 ></v-date-picker>
@@ -236,7 +240,7 @@
       invalid: false,
       name: '',
       nameRules: [
-        v => !!v || 'aお名前を入力してください',
+        v => !!v || 'お名前を入力してください',
         v => (v && v.length <= 20) || 'Name must be less than 10 characters',
       ],
       email: '',
@@ -349,8 +353,5 @@
 
 
 </body>
-<footer style="text-align:center">
-  Send Grid
-</footer>
 
 </html>
