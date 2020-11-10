@@ -144,13 +144,17 @@
         data: () => ({
             test:"",
             type: 'month',
-            types: ['month', 'week', 'category'],
+            types: [
+              { text: '月' , value: 'month'},
+              { text: '週' , value: 'week'},
+              { text: '日' , value: 'category'},
+            ],
             mode: 'stack',
             modes: ['stack', 'column'],
             weekday: [0, 1, 2, 3, 4, 5, 6],
             weekdays: [
-                { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
-                { text: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
+                { text: '日 - 土', value: [0, 1, 2, 3, 4, 5, 6] },
+                { text: '月 - 日', value: [1, 2, 3, 4, 5, 6, 0] },
 
 
             ],

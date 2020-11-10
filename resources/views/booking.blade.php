@@ -214,6 +214,13 @@
             2020 — <strong>Naoki Yamashita</strong>
           </v-col>
         </v-footer>
+        <v-btn
+          color="green darken-1"
+          text
+          href="/schedule/listing"
+        >
+          スケジュール画面へ（管理者用）
+          </v-btn>
       </v-card>
     </v-app>
   </div>
