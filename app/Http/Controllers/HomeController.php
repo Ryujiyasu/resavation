@@ -124,6 +124,17 @@ class HomeController extends Controller
 
         return redirect('/schedule/listing');
     }
+    public function cancelSchedule(Request $request)
+    {
+        $del_schedule=Schedule::find($request->id);
+        $del_schedule->name=null;
+        $del_schedule->tel=null;
+        $del_schedule->email=null;
+        $del_schedule->mst_cource_id=null;
+        $del_schedule->save();
+
+        //return redirect('/schedule/listing');
+    }
 
     public function listing(){
 

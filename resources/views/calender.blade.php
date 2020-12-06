@@ -127,7 +127,7 @@
                               <v-btn
                                   text
                                   color="error"
-                                  @click=""
+                                  @click="deleteConfirm(selectedEvent.id)"
                               >
                                   予約取消し
                               </v-btn>
@@ -143,6 +143,20 @@
 
                     </v-menu>
                 </v-sheet>
+
+                <!-- 削除確認ダイアログを追加 -->
+                  <v-dialog v-model="deleteDialog" persistent max-width="290">
+                    <v-card>
+                      <v-card-title class="headline">予約取消し確認</v-card-title>
+                      <v-card-text>ID:@{{ deleteID }}の予約を取消してもよろしいですか？</v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="deleteDialog = false">キャンセル</v-btn>
+                        <v-btn color="green darken-1" text @click="deleteItem(deleteID)">実行</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
             </div>
             @{{test}}
 
@@ -159,6 +173,7 @@
         el: '#app',
         vuetify: new Vuetify(),
         data: () => ({
+
             focus: "",
             test:"",
             type: 'category',
@@ -181,6 +196,9 @@
             selectedOpen: false,
             selectedEvent: {},
             selectedElement: '',
+
+            deleteDialog: false,	// 追加：初期値は非表示
+            deleteID: null,			// 追加：削除Itemのid
 
             events: [],
             colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
@@ -224,8 +242,11 @@
                 console.log(id);
                 const page='/schedule/edit/' +id;
                 window.location.href = page;
-
-
+            },
+            eventCancel(id){
+                console.log(id);
+                const page='/schedule/cancel/' +id;
+                window.location.href = page;
             },
             showEvent ({ nativeEvent, event }) {
                 const open = () => {
@@ -274,6 +295,21 @@
             },
             getEventColor (event) {
                 return event.color
+            },
+            // 削除確認ダイアログ表示を追加
+            deleteConfirm(id) {
+              this.deleteDialog = true;
+              this.deleteID = id;
+            },
+            deleteItem(id) {
+                axios.delete('/schedule/cancel/' + id)
+                .then( (res) => {
+                  window.location.href = "/schedule/listing"	// 成功したらページを再読み込み。
+                })
+                .catch( (error) => {
+                  console.log(error);
+                })
+                this.deleteDialog = false;	// 最後に削除確認ダイアログは閉じます。
             },
         },
     })

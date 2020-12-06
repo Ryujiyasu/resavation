@@ -199,7 +199,6 @@
     </v-container>
 
 
-
       <v-card height="150">
         <v-footer
           absolute
@@ -240,6 +239,7 @@
       dialog: false,
       modalTitle:'処理中…',
       modalText:'',
+
 
       valid: true,
       invalid: false,
