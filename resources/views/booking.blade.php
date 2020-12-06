@@ -130,8 +130,6 @@
                 </template>
                 <v-date-picker
                   v-model="date"
-                  :landscape="landscape"
-                  :reactive="reactive"
                   locale="jp-ja"
                   :day-format="date => new Date(date).getDate()"
                   @input="menu2 = false"

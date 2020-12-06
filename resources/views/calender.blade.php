@@ -9,6 +9,8 @@
 
 </head>
 <body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js" type="text/javascript"></script>
+
 <div id="app">
     <div id="app">
         <v-app id="inspire">
@@ -110,16 +112,31 @@
 
                             </v-toolbar>
                             <v-card-text>
-                                <span v-html="selectedEvent.start"></span><br>
-                                <span v-html="selectedEvent.end"></span>
+                                <span >@{{selectedEvent.start | moment}}</span><br>
+                                <span >@{{selectedEvent.end | moment}}</span><br>
+                                <span >@{{selectedEvent.cource}}</span>
                             </v-card-text>
                             <v-card-actions>
+                              <v-btn
+                                  text
+                                  color="primary"
+                                  @click=""
+                              >
+                                  予約変更
+                              </v-btn>
+                              <v-btn
+                                  text
+                                  color="error"
+                                  @click=""
+                              >
+                                  予約取消し
+                              </v-btn>
                                 <v-btn
                                     text
                                     color="secondary"
                                     @click="selectedOpen = false"
                                 >
-                                    Cancel
+                                    閉じる
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -142,8 +159,9 @@
         el: '#app',
         vuetify: new Vuetify(),
         data: () => ({
+            focus: "",
             test:"",
-            type: 'month',
+            type: 'category',
             types: [
               { text: '月' , value: 'month'},
               { text: '週' , value: 'week'},
@@ -169,7 +187,11 @@
             names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
             category: [],
         }),
-
+        filters: {
+            moment: function (date) {
+                return moment(date).format('MM月DD日 HH:mm');// eslint-disable-line
+            }
+        },
         computed: {
             cal () {
               return this.ready ? this.$refs.calendar : null
@@ -182,6 +204,7 @@
             this.ready = true
             this.scrollToTime()
             this.updateTime()
+            this.$refs.calendar.checkChange()
           },
 
         methods: {
@@ -209,6 +232,7 @@
                     this.selectedEvent = event
                     this.selectedElement = nativeEvent.target
                     setTimeout(() => this.selectedOpen = true, 10)
+                    console.log(this.selectedEvent)
                 }
                 if (this.selectedOpen) {
                     this.selectedOpen = false
@@ -241,6 +265,7 @@
                                     color: data[2]["color"],
                                     timed: true,
                                     category: data[1]["name"],
+                                    cource: data[2]["name"],
                                 }
                             )
                         });
@@ -249,9 +274,6 @@
             },
             getEventColor (event) {
                 return event.color
-            },
-            rnd (a, b) {
-                return Math.floor((b - a + 1) * Math.random()) + a
             },
         },
     })
