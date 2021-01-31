@@ -10,12 +10,16 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
 
     <title>Calendar</title>
-
+    <style>
+      [v-cloak]{
+          display: none;
+      }
+    </style>
 </head>
 <body>
 
 
-  <div id="app">
+  <div id="app" v-cloak>
     <v-app id="inspire">
       <v-container>
         <v-card

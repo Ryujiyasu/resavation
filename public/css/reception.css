@@ -1,0 +1,28 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+.grovalNavigation{
+    height: 10vh;
+    text-align: center;
+    background-color: #888;
+    color: #fff;
+}
+main{
+    min-height: 88vh;
+    display: flex;
+    margin-top: 2vh;
+}
+.content{
+    flex: 1;
+    background-color: #eee;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.localNavigation{
+    width: 256px;
+    text-align: center;
+    background-color: #888;
+    color: #fff;
+}

@@ -142,4 +142,11 @@ class HomeController extends Controller
       return view('listing',['schedules'=>$schedules]);
 
     }
+
+    public function reception(){
+
+          //$schedules=Schedule::whereNotNull('name')->get();
+          return view('reception');
+
+        }
 }

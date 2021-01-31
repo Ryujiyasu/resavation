@@ -23,3 +23,5 @@ Route::get('listing/', 'HomeController@listing');
 Route::get('schedule/edit/{id}', 'HomeController@editSchedule');
 Route::delete('schedule/cancel/{id}', 'HomeController@cancelSchedule');
 Route::post('schedule/edit/{id}', 'HomeController@editScheduleComplete');
+
+Route::get('reception/', 'HomeController@reception');

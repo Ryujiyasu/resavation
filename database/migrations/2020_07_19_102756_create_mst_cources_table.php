@@ -19,6 +19,9 @@ class CreateMstCourcesTable extends Migration
             $table->string('name');
             $table->text('detail')->nullable();
             $table->string('color');
+            $table->string('number_frames');
+            $table->integer('price');
+            
         });
     }
 

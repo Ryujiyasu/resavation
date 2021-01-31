@@ -16,6 +16,11 @@ class CreateMstStaffTable extends Migration
         Schema::create('mst_staff', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $tabel->string('name_kana')->nullable();
+            $table->string('tel_1',11);
+            $table->integer('treatment_flag');
+            $table->text('introduction')->nullable();
+            $table->string('line_user_id')->nullable();
 
         });
     }
